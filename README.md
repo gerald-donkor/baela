@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Baela
 
-## Getting Started
+A single-instructor course platform using Next.js 16.3.8, React 19.2.8, TypeScript, shadcn-style Radix UI components, Drizzle, Neon Postgres/Auth, ImageKit, Polar, and Sentry.
 
-First, run the development server:
+## Local setup
 
-```bash
+Use Node 22.12+ and npm.
+
+```sh
+npm ci
+cp .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Without credentials the public site displays its real empty state, launch prices, policy placeholders, and closed enrollment. It does not fabricate courses or purchases.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Create separate development and production Neon projects/branches. Set the pooled `DATABASE_URL`, enable managed Neon Auth, and copy its base URL. Generate a cookie secret of at least 32 random characters. Configure Google, GitHub, verified email/password, recovery email, and exact allowed app origins. Create your instructor account, then set its immutable ID as `ADMIN_AUTH_USER_ID`.
+2. Run `npm run db:migrate`. Drizzle owns application tables; Neon Auth owns identities and sessions. Do not migrate Neon's internal auth tables.
+3. Configure Polar sandbox credentials and a signed webhook. Create fixed USD products: **833 cents/course**, **1667 cents/month**, **8333 cents/lifetime**. Link product IDs through Studio → Settings and each course editor. Production requires separate credentials/products and seller approval.
+4. Configure ImageKit private uploads, URL signing, and adaptive streaming on a suitable plan. Set its URL endpoint/public key and server-only private key.
+5. Set Sentry, support address, `NEXT_PUBLIC_APP_URL`, and a random `CRON_SECRET`. Account deletion also needs a project-scoped Neon management API key and project ID, and `NEON_BRANCH_ID` for the same Auth branch.
+6. Visit `/admin`, create sections/lessons, upload media, verify processing, save drafts, publish lesson revisions, connect the course product, and publish the course.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+See the [current implementation checkpoint](docs/implementation-status.md) for continuation changes, checks, and remaining release gates.
 
-## Learn More
+Read [launch configuration](docs/launch.md) before taking payments and [operations](docs/operations.md) for incident recovery.
 
-To learn more about Next.js, take a look at the following resources:
+## Commands
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```sh
+npm run check          # ESLint, generated route types, TypeScript, Vitest
+npm run build          # Production build
+npm run test:e2e       # Desktop/mobile tests against a built app
+npm run db:generate   # Generate schema migrations
+npm run db:migrate    # Apply committed migrations
+npm run verify:launch # Check production environment and database setup
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Install browsers once with `npx playwright install chromium firefox webkit` (on a supported Linux host, install their OS dependencies too). To run only locally available engines, use `npm run test:e2e -- --project=desktop --project=mobile --project=firefox`. In environments prohibiting Turbopack's local worker port, use `npm run build -- --webpack`; Next.js and the application architecture remain the same.
 
-## Deploy on Vercel
+## Implemented v1
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Responsive catalog/pricing, sales pages, preview lessons, visible locked curriculum, light/dark preference, metadata, sitemap, and Open Graph image.
+- Managed authentication, student dashboard, continue watching, resume position, 95% watched-interval completion, manual completion/undo, Markdown, and attachments.
+- Verified Polar webhooks, durable jobs, duplicate protection, paid-period expiry, cumulative full-refund revocation, lifetime upgrade cancellation, and customer portal.
+- Browser uploads, private signed media, HLS.js adaptive playback with MP4 fallback, course covers, video readiness checks, saved draft/live revisions, reordering, archival protection, student ownership, refund requests, policies/business settings, and failed-job retries.
+- Account deletion requiring recent sign-in, renewal cancellation, pending checkout checks, retries, and tombstones preventing late webhooks from restoring access.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Architecture
+
+Server components read through the server-only Drizzle layer. Admin/account forms use Server Actions backed by shared services. Mutations validate input/origin and authorize on the server. Admin pages independently check the instructor ID. Client-supplied prices and user IDs are never trusted.
+
+Access is the union of preview status, permanent course purchases, paid subscription periods, and lifetime purchases. Each order creates a distinct entitlement; revoking one leaves independent grants intact. Subscription status and checkout redirects never create paid access.
+
+Polar signatures use SDK API version `2026-04`. Events/jobs commit together before acknowledgment. Workers fetch canonical state, preserve paid-period snapshots, reject older updates, and retry failures. Durable checkout intents recover ambiguous responses by metadata instead of blindly repeating a POST.
+
+ImageKit objects stay private. Lesson-authorized URLs expire within five minutes or sooner at access expiry. HLS manifests/segments are signed on demand. Signed URLs are temporary bearer credentials, not DRM; they cannot prevent all copying or screen recording.
+
+Neon supplies Postgres and Auth; Next.js runs the application backend and workers. Public catalog caching uses tags; private responses and signed URLs are not shared-cacheable. No AI backend is included in v1.
+
+## Deferred and unverified
+
+The YouTube-like offline library is **not implemented in v1**. Future browser storage requires download manifests, entitlement revalidation, expiry/eviction, and browser testing. Avoiding a paid DRM vendor does not eliminate hosting costs or provide DRM-grade protection. Current downloads are lesson attachments only.
+
+Other deferred features: Polar Benefits, bundles/discounts, Q&A, certificates, captions/search, AI tutoring, waitlists, marketing email, and completion/drop-off analytics. Stable lesson IDs and immutable revisions provide extension points.
+
+Automated integration tests use embedded PostgreSQL with mocked provider responses. Real auth, checkout/refunds, signed HLS and Neon identity deletion still need the live-service acceptance checks. Seller eligibility, reviewed policies, domain, service budgets, and course content remain launch dependencies.
