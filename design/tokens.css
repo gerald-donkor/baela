@@ -1,0 +1,48 @@
+/* Baela / Horizon — semantic tokens shared by every page. See docs/design-system.md. */
+:root {
+  color-scheme: light;
+  --background: #f5f7fc;
+  --foreground: #17213a;
+  --card: #ffffff;
+  --card-foreground: #17213a;
+  --primary: #365bc5;
+  --primary-foreground: #ffffff;
+  --secondary: #e9eefb;
+  --secondary-foreground: #304d99;
+  --muted: #edf0f7;
+  --muted-foreground: #596780;
+  --border: #dce2ef;
+  --destructive: #bc354f;
+  --success: #23846b;
+  --accent: #658ce8;
+  --surface-raised: #ffffff;
+  --glow: #658ce8;
+  --control-radius: 0.625rem;
+  --card-radius: 1rem;
+  --panel-radius: 1.5rem;
+  --shadow-card: 0 8px 32px #15265406;
+  --shadow-glow: 0 0 48px #658ce814;
+  --page-width: 1120px;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #050919;
+  --foreground: #f2f4fc;
+  --card: #0b1023;
+  --card-foreground: #f2f4fc;
+  --primary: #a6bfff;
+  --primary-foreground: #0b173a;
+  --secondary: #141d37;
+  --secondary-foreground: #c5d3fb;
+  --muted: #11182d;
+  --muted-foreground: #9aa7c2;
+  --border: #222c45;
+  --destructive: #ff96a9;
+  --success: #7bd9b5;
+  --accent: #88aaff;
+  --surface-raised: #10182d;
+  --glow: #7faaff;
+  --shadow-card: 0 8px 32px #0000001a;
+  --shadow-glow: 0 0 48px #658ce818;
+}

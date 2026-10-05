@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { businessProfile } from "@/lib/server/catalog";
+import { Brand } from "./ui/brand";
 export async function SiteFooter() {
   const business = await businessProfile();
   return (
-    <footer className="border-t border-border mt-20">
+    <footer className="border-t border-border/70 mt-20">
       <div className="shell py-10 flex flex-wrap gap-6 items-center justify-between">
         <div>
-          <Link href="/" className="text-2xl font-semibold tracking-tighter">
-            baela.
+          <Link href="/" aria-label="Baela home">
+            <Brand />
           </Link>
           <p className="text-sm text-muted-foreground mt-2">
             {business?.instructor
@@ -17,7 +18,7 @@ export async function SiteFooter() {
         </div>
         <nav
           aria-label="Footer"
-          className="flex gap-5 text-sm text-muted-foreground"
+          className="flex flex-wrap gap-5 text-xs text-muted-foreground"
         >
           <Link href="/support">Support</Link>
           <Link href="/privacy">Privacy</Link>

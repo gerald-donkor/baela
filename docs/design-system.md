@@ -1,0 +1,102 @@
+# Baela design system — Horizon
+
+Horizon takes its visual direction from [`design/landing-page-ref.png`](../design/landing-page-ref.png): midnight navy, a cool blue illuminated horizon, centered editorial typography, fine borders, and quiet panels. The landing page is the first implementation; the same semantic tokens style course pages, lessons, the dashboard, authentication, and Studio.
+
+## Source of truth
+
+- [`design/tokens.css`](../design/tokens.css) defines the palette, radii, surface hierarchy, shadows, and content width. `app/globals.css` imports it and maps semantic colors to Tailwind utilities.
+- [`/design-system`](../app/design-system/page.tsx) is a browsable component gallery with both themes, typography, palette, controls, course cards, and progress.
+- `components/ui/` contains reusable primitives. Extend these before adding page-specific duplicates.
+- `app/page.module.css` owns the landing-page horizon and composition; `components/landing/learning-demo.module.css` owns the interactive demo. Keep these effects scoped.
+
+## Color and surfaces
+
+| Role / Tailwind utility | Dark (default) | Light     | Use                                  |
+| ----------------------- | -------------- | --------- | ------------------------------------ |
+| `background`            | `#050919`      | `#f5f7fc` | Page canvas                          |
+| `foreground`            | `#f2f4fc`      | `#17213a` | Headings, primary text               |
+| `card`                  | `#0b1023`      | `#ffffff` | Course cards, pricing, panels        |
+| `surface-raised`        | `#10182d`      | `#ffffff` | Featured content, inner panels       |
+| `primary`               | `#a6bfff`      | `#365bc5` | Actions, progress, active navigation |
+| `primary-foreground`    | `#0b173a`      | `#ffffff` | Text on primary actions              |
+| `secondary`             | `#141d37`      | `#e9eefb` | Selected states, subtle emphasis     |
+| `muted-foreground`      | `#9aa7c2`      | `#596780` | Supporting copy and metadata         |
+| `border`                | `#222c45`      | `#dce2ef` | Dividers and panel outlines          |
+| `success`               | `#7bd9b5`      | `#23846b` | Completed/positive states            |
+| `destructive`           | `#ff96a9`      | `#bc354f` | Errors and destructive actions       |
+
+Use semantic colors (`text-primary`, `bg-card`, `border-border`) rather than navy or blue literals in application components. Decorative art may use scoped fixed colors. Always pair primary fills with `text-primary-foreground`. Completed and locked states need text or icons as well as color.
+
+New visitors see dark mode. The header toggle allows light mode; `next-themes` persists the user's choice. Both themes share the same layout and components.
+
+## Typography and spacing
+
+- **Font:** bundled Geist Sans through `geist/font/sans`; no external font request.
+- **Hero:** fluid 38–76px, 1.09 line height, −0.062em tracking. Use once per landing page.
+- **Page titles:** `text-4xl font-medium tracking-tight`.
+- **Section titles:** `text-3xl sm:text-4xl font-medium tracking-[-.045em]` through `SectionHeading`.
+- **Card titles:** 18–20px, medium/semibold, tight tracking.
+- **Body:** 14–16px with 1.7–1.85 line height. Use `text-muted-foreground` for secondary copy.
+- **Metadata:** 12px. The scaled product demo uses smaller labels; regular application interfaces should retain readable 12–14px labels.
+- **Eyebrow:** `.eyebrow` uses 11px, uppercase, 0.18em tracking, primary color.
+- **Spacing:** Tailwind's 4px grid. Use 16–24px gaps, 24–32px card padding, 64–96px section spacing.
+- **Container:** `.shell` caps content at `--page-width: 1120px`; gutters are 24px, falling to 16px on small screens.
+- **Radii:** `rounded-control` = 10px; `rounded-card` = 16px; `rounded-panel` = 24px. Pills are for badges and circular indicators.
+
+## Components
+
+| Component                 | API / guidance                                                                                                                                                               |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Brand`                   | Shared star mark and Baela wordmark. Wrap in a home link with `aria-label="Baela home"`.                                                                                     |
+| `Button`                  | `variant`: default, secondary, outline, ghost, destructive. `size`: default, sm, lg, icon. Use `asChild` for links. Primary gets a subtle blue gradient and inset highlight. |
+| `Card` / `CardContent`    | Theme-aware surface and fine outline. `CardContent` provides 24px padding.                                                                                                   |
+| `Badge`                   | `variant`: default, muted, success. A compact status pill; use explicit readable text.                                                                                       |
+| `SectionHeading`          | Required `eyebrow` and `title`; optional `description`, `centered`, `className`, `id`.                                                                                       |
+| `LearningProgress`        | `value` (0–100), optional `label` and `className`. Clamps invalid values and supplies an accessible native progress bar with percentage.                                     |
+| `CourseCard`              | Real course title, summary, optional cover/price/progress. Supports an explicit `href`. Shares tokens with the dashboard.                                                    |
+| `.field` / `.field-label` | Theme-aware inputs, selects, textareas, and label spacing with visible focus.                                                                                                |
+| `LessonCurriculum`        | Existing desktop sidebar and mobile dialog inherit the palette; selected, completed, and locked states remain explicit.                                                      |
+
+```tsx
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { LearningProgress } from "@/components/ui/learning-progress";
+import { SectionHeading } from "@/components/ui/section-heading";
+
+<section className="shell py-16">
+  <SectionHeading
+    eyebrow="Your learning space"
+    title="Keep your curiosity moving."
+    description="Pick up where you left off."
+  />
+  <Card>
+    <CardContent>
+      <Badge>In progress</Badge>
+      <h3 className="mt-4 text-xl font-medium tracking-tight">
+        {course.title}
+      </h3>
+      <LearningProgress value={percentage} className="mt-6" />
+    </CardContent>
+  </Card>
+</section>;
+```
+
+## Course and lesson layouts
+
+Course catalogs use 1/2/3 columns at mobile/tablet/desktop, with 20–24px gaps. Place readable course metadata below the art. Sales pages can use a wide content column and narrower enrollment card; lesson pages retain the wide reading/player area and a 290px desktop curriculum. Collapse sidebars into the existing accessible dialog on mobile.
+
+Use restrained surfaces in learning screens. Reserve the large horizon, broad glows, and centered hero for marketing and occasional onboarding. Keep the lesson player and long-form reading content visually calm. Avoid glows on every panel.
+
+## Interaction and accessibility
+
+Use real links for navigation and buttons for state changes. Keep focus rings visible, icon-only controls labeled, inputs associated with labels, and progress labeled. Use a single H1 and ordered heading levels. The mobile navigation exposes `aria-expanded`; the skip link targets the main content. Honor `prefers-reduced-motion`. No demo animation auto-plays.
+
+The landing preview is explicitly labeled **Interactive demo / Sample content**. Its sample lessons and completion state live only in `LearningDemo` component state and reset on reload. They do not create catalog entries, entitlements, purchases, or saved learning progress. Real catalog and checkout behavior remain server-backed; unconfigured enrollment continues to show the closed state.
+
+## Extending the system
+
+1. Reuse primitives and semantic tokens first.
+2. Put new reusable UI in `components/ui/`, domain components alongside existing course/lesson components, and page-specific decoration in CSS Modules.
+3. Add any new semantic token to both themes and document its purpose here.
+4. Check narrow mobile widths, both themes, keyboard focus, empty/locked/error states, and reduced motion.
+5. Read the installed Next.js guides in `node_modules/next/dist/docs/` before changing routing, rendering, or framework APIs.

@@ -1,0 +1,551 @@
+.frame {
+  width: min(1040px, calc(100% - 3rem));
+  margin: 76px auto 0;
+  position: relative;
+  z-index: 2;
+  border: 1px solid color-mix(in srgb, var(--primary) 25%, var(--border));
+  border-radius: var(--panel-radius);
+  background: var(--card);
+  box-shadow:
+    0 -14px 70px -35px var(--glow),
+    0 0 0 7px color-mix(in srgb, var(--primary) 4%, transparent),
+    0 25px 90px #00000020;
+  text-align: left;
+  overflow: hidden;
+  scroll-margin-top: 2rem;
+}
+.frame::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 15%;
+  width: 70%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+}
+.windowBar {
+  height: 37px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 17px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-raised);
+  font-size: 10px;
+  color: var(--muted-foreground);
+}
+.windowDots {
+  display: flex;
+  gap: 5px;
+  width: 100px;
+}
+.windowDots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--muted-foreground);
+  opacity: 0.35;
+}
+.demoLabel {
+  width: 100px;
+  text-align: right;
+  font-size: 9px;
+  letter-spacing: 0.02em;
+}
+.workspace {
+  display: grid;
+  grid-template-columns: 188px 1fr;
+}
+.sidebar {
+  padding: 27px 16px 20px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+.sidebar > span {
+  margin: 0 12px 33px;
+}
+.sidebar > span svg {
+  width: 18px;
+  height: 20px;
+}
+.sidebarLabel {
+  color: var(--muted-foreground);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  padding: 0 12px;
+  margin-bottom: 12px;
+}
+.nav,
+.activeNav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  padding: 11px 12px;
+  border-radius: 7px;
+  font-size: 11px;
+  margin-bottom: 3px;
+  color: var(--muted-foreground);
+}
+.nav:hover {
+  background: var(--muted);
+  color: var(--foreground);
+}
+.activeNav {
+  color: var(--primary);
+  background: var(--secondary);
+}
+.sidebarBottom {
+  margin-top: auto;
+  padding: 32px 12px 7px;
+}
+.miniStar {
+  width: 33px;
+  height: 33px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--secondary);
+  color: var(--primary);
+}
+.sidebarBottom p {
+  font-size: 13px;
+  line-height: 1.6;
+  margin-top: 12px;
+}
+.sidebarBottom > span {
+  display: block;
+  font-size: 10px;
+  color: var(--muted-foreground);
+  line-height: 1.7;
+  margin-top: 6px;
+}
+.main {
+  min-width: 0;
+}
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 25px;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted-foreground);
+  font-size: 10px;
+}
+.toolbar > span:first-child {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.toolbar > span:first-child > span {
+  color: var(--foreground);
+}
+.content {
+  padding: 26px;
+}
+.pageHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.kicker {
+  color: var(--primary);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  font-weight: 500;
+}
+.pageHeading h3 {
+  font-size: 25px;
+  letter-spacing: -0.04em;
+  font-weight: 500;
+  margin-top: 7px;
+}
+.pageHeading > div > p:last-child {
+  font-size: 11px;
+  color: var(--muted-foreground);
+  margin-top: 6px;
+}
+.avatar {
+  height: 34px;
+  width: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--primary);
+  background: var(--secondary);
+  border: 1px solid var(--border);
+  font-size: 15px;
+}
+.tabs {
+  display: flex;
+  gap: 22px;
+  border-bottom: 1px solid var(--border);
+  margin: 22px 0;
+}
+.tabs button {
+  color: var(--muted-foreground);
+  font-size: 11px;
+  padding: 0 0 11px;
+  border-bottom: 2px solid transparent;
+}
+.tabs button[aria-pressed="true"] {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+.courseFeature {
+  display: grid;
+  grid-template-columns: 41% 1fr;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--surface-raised);
+}
+.orbitArt {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 115%, #7185e078, transparent 60%),
+    linear-gradient(130deg, #141a39, #222d57);
+  display: grid;
+  place-items: center;
+  min-height: 218px;
+}
+.orbitArt div {
+  position: absolute;
+  width: 165px;
+  height: 165px;
+  border: 1px solid #a4b8ff50;
+  border-radius: 50%;
+  transform: rotate(-35deg) scaleX(0.6);
+  box-shadow: inset -8px 0 18px #8fabff20;
+}
+.orbitArt div:nth-child(2) {
+  transform: rotate(30deg) scaleX(0.6);
+}
+.orbitArt div:nth-child(3) {
+  transform: rotate(90deg) scaleX(0.6);
+  border-color: #c7d4ff70;
+}
+.orbitArt::after {
+  content: "";
+  position: absolute;
+  top: 35px;
+  left: 34%;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #d6e1ff;
+  box-shadow: 0 0 20px #c4d6ff;
+}
+.orbitArt span {
+  position: relative;
+  z-index: 1;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.18;
+  color: #e3eaff;
+  letter-spacing: -0.055em;
+  text-align: center;
+}
+.featureContent {
+  padding: 22px 24px;
+}
+.featureContent h4 {
+  font-size: 19px;
+  letter-spacing: -0.035em;
+  margin-top: 8px;
+}
+.featureContent > p:not(.kicker) {
+  font-size: 11px;
+  color: var(--muted-foreground);
+  margin-top: 6px;
+}
+.overviewBottom {
+  display: grid;
+  grid-template-columns: 1.55fr 1fr;
+  gap: 16px;
+  margin-top: 18px;
+}
+.lessonList,
+.progressCard {
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 12px;
+  padding: 16px;
+}
+.lessonList h4 {
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+.lessonList h4 > span {
+  font-size: 8px;
+  color: var(--muted-foreground);
+  letter-spacing: 0.07em;
+}
+.lessonList button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  padding: 10px 6px;
+  border-radius: 6px;
+  font-size: 10px;
+}
+.lessonList button:hover,
+.lessonList button[aria-current] {
+  background: var(--secondary);
+}
+.lessonList button > span:nth-child(2) {
+  flex: 1;
+}
+.lessonList button > svg {
+  color: var(--muted-foreground);
+}
+.lessonList small {
+  display: block;
+  font-size: 9px;
+  color: var(--muted-foreground);
+  margin-top: 3px;
+}
+.lessonIcon {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: var(--secondary);
+  color: var(--primary);
+  border-radius: 6px;
+  font-size: 9px;
+}
+.progressCard {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: radial-gradient(
+    ellipse at 50% 0,
+    color-mix(in srgb, var(--primary) 5%, transparent),
+    transparent 70%
+  );
+}
+.progressRing {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: 3px solid var(--secondary);
+  border-top-color: var(--primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 19px;
+}
+.progressRing small {
+  font-size: 10px;
+  color: var(--muted-foreground);
+  margin-left: 3px;
+}
+.progressCard h4 {
+  font-size: 12px;
+  margin-top: 12px;
+}
+.progressCard p {
+  font-size: 10px;
+  color: var(--muted-foreground);
+  line-height: 1.6;
+  max-width: 160px;
+  margin-top: 6px;
+}
+.statusBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 25px;
+  border-top: 1px solid var(--border);
+  font-size: 9px;
+  color: var(--muted-foreground);
+}
+.statusBar > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.statusDot {
+  width: 4px;
+  height: 4px;
+  flex-shrink: 0;
+  background: var(--success);
+  border-radius: 50%;
+}
+.statusBar button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.lessonView {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  align-items: start;
+  gap: 16px;
+  min-height: 428px;
+}
+.readingCard {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  background: var(--surface-raised);
+}
+.readingCard h4 {
+  font-size: 24px;
+  line-height: 1.25;
+  letter-spacing: -0.04em;
+  margin: 20px 0 12px;
+}
+.readingCard > p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--muted-foreground);
+  margin-bottom: 16px;
+}
+.readingCard > .subtitle {
+  color: var(--foreground);
+}
+.exercise {
+  display: flex;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 8px;
+  background: var(--secondary);
+  margin-bottom: 24px;
+}
+.exercise > svg {
+  color: var(--primary);
+  flex-shrink: 0;
+}
+.exercise h5 {
+  font-size: 11px;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+.exercise p {
+  font-size: 11px;
+  color: var(--muted-foreground);
+  line-height: 1.7;
+}
+@media (max-width: 850px) {
+  .workspace {
+    grid-template-columns: 150px 1fr;
+  }
+  .sidebar {
+    padding-inline: 10px;
+  }
+  .content {
+    padding: 20px;
+  }
+  .courseFeature {
+    grid-template-columns: 36% 1fr;
+  }
+  .featureContent {
+    padding: 20px;
+  }
+  .pageHeading h3 {
+    font-size: 22px;
+  }
+}
+@media (max-width: 640px) {
+  .frame {
+    width: calc(100% - 2rem);
+    margin-top: 55px;
+    border-radius: 15px;
+  }
+  .windowBar {
+    padding-inline: 12px;
+    font-size: 8px;
+  }
+  .windowDots {
+    width: 28px;
+  }
+  .demoLabel {
+    width: auto;
+    font-size: 8px;
+  }
+  .workspace {
+    display: block;
+  }
+  .sidebar {
+    display: none;
+  }
+  .toolbar {
+    padding: 12px 16px;
+  }
+  .content {
+    padding: 18px 16px;
+  }
+  .pageHeading h3 {
+    font-size: 20px;
+  }
+  .pageHeading > div > p:last-child {
+    max-width: 215px;
+    font-size: 10px;
+    line-height: 1.6;
+  }
+  .avatar {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+  .courseFeature {
+    grid-template-columns: 1fr;
+  }
+  .orbitArt {
+    min-height: 160px;
+  }
+  .orbitArt div {
+    height: 125px;
+    width: 125px;
+  }
+  .orbitArt span {
+    font-size: 24px;
+  }
+  .orbitArt::after {
+    top: 18px;
+    left: 40%;
+  }
+  .featureContent {
+    padding: 20px;
+  }
+  .overviewBottom {
+    grid-template-columns: 1fr;
+  }
+  .progressCard {
+    display: none;
+  }
+  .lessonView {
+    grid-template-columns: 1fr;
+  }
+  .lessonView > .lessonList {
+    order: -1;
+  }
+  .readingCard {
+    padding: 20px;
+  }
+  .statusBar {
+    padding: 12px 16px;
+    font-size: 8px;
+  }
+  .statusBar > span {
+    max-width: 240px;
+  }
+}

@@ -1,0 +1,308 @@
+.hero {
+  position: relative;
+  isolation: isolate;
+  padding-top: 173px;
+}
+.atmosphere {
+  position: absolute;
+  inset: -88px 0 auto;
+  height: 870px;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  mask-image: linear-gradient(#000 40%, transparent 95%);
+}
+.beams {
+  position: absolute;
+  width: 800px;
+  height: 350px;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background:
+    repeating-linear-gradient(90deg, transparent 0 78px, #829dfb06 79px 80px),
+    radial-gradient(ellipse at 50% 95%, #688dff30, transparent 65%);
+  mask-image: linear-gradient(transparent, #000 50%, transparent);
+}
+.horizonClip {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 480px;
+  mask-image: linear-gradient(#000 45%, transparent 95%);
+}
+.horizon {
+  position: absolute;
+  top: 170px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 960px;
+  height: 960px;
+  border-radius: 50%;
+  border-top: 2px solid #b5deff;
+  background: var(--background);
+  box-shadow:
+    0 -6px 14px -4px #abdfff,
+    0 -15px 35px -13px #6eacff,
+    0 -44px 95px -42px #477feb,
+    inset 0 9px 22px -16px #789ef8;
+}
+.horizon::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 160px;
+  height: 6px;
+  border-radius: 50%;
+  background: #c9f5ff;
+  filter: blur(5px);
+}
+.atmosphere::after {
+  content: "";
+  position: absolute;
+  top: 520px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 780px;
+  height: 310px;
+  background: radial-gradient(ellipse, #729fff28, transparent 65%);
+}
+.stars {
+  position: absolute;
+  top: 650px;
+  left: 50%;
+  width: 2px;
+  height: 2px;
+  background: #bdcaff60;
+  box-shadow:
+    -150px 14px #bdcaff40,
+    125px 10px #bdcaff70,
+    -70px 45px #bdcaff50,
+    70px 35px #bdcaff50,
+    185px 59px #bdcaff40,
+    -230px 52px #bdcaff30,
+    37px -25px #bdcaff50;
+}
+.heroContent {
+  position: relative;
+  z-index: 1;
+  padding: 0 1.5rem;
+  text-align: center;
+}
+.heroBadge {
+  background: linear-gradient(
+    110deg,
+    color-mix(in srgb, var(--primary) 19%, var(--background)),
+    color-mix(in srgb, var(--primary) 6%, var(--background))
+  );
+  border-color: color-mix(in srgb, var(--primary) 35%, transparent);
+  font-size: 11px;
+  padding: 7px 12px;
+  box-shadow: inset 0 1px 0 #ffffff16;
+}
+.heroContent h1 {
+  font-size: clamp(44px, 5.4vw, 76px);
+  line-height: 1.09;
+  letter-spacing: -0.062em;
+  font-weight: 550;
+  margin: 24px auto 0;
+  max-width: 850px;
+}
+.heroContent h1 span {
+  background: linear-gradient(
+    110deg,
+    var(--foreground) 10%,
+    var(--primary) 90%
+  );
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.heroContent > p {
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--muted-foreground);
+  margin: 25px auto 0;
+  max-width: 480px;
+  letter-spacing: -0.015em;
+}
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 28px;
+}
+.heroNote {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  color: var(--muted-foreground);
+  margin-top: 18px;
+}
+.heroNote span {
+  width: 4px;
+  height: 4px;
+  background: var(--primary);
+  border-radius: 50%;
+}
+.valueStrip {
+  padding: 51px 0 40px;
+  border-bottom: 1px solid var(--border);
+}
+.valueStrip > p {
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted-foreground);
+  margin-bottom: 26px;
+}
+.featureCard {
+  padding: 27px;
+  background:
+    radial-gradient(
+      ellipse at 0 0,
+      color-mix(in srgb, var(--primary) 4%, transparent),
+      transparent 70%
+    ),
+    var(--card);
+}
+.featureIcon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  background: var(--secondary);
+  color: var(--primary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 #ffffff07;
+}
+.emptyCourses {
+  padding: 50px 24px;
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  background:
+    radial-gradient(
+      ellipse at 50% 0,
+      color-mix(in srgb, var(--primary) 7%, transparent),
+      transparent 65%
+    ),
+    var(--card);
+}
+.emptyCourses > p {
+  font-size: 13px;
+}
+.plan,
+.featuredPlan {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.featuredPlan {
+  border-color: color-mix(in srgb, var(--primary) 45%, var(--border));
+  background:
+    radial-gradient(
+      ellipse at 50% 0,
+      color-mix(in srgb, var(--primary) 12%, transparent),
+      transparent 75%
+    ),
+    var(--card);
+  box-shadow: var(--shadow-glow);
+}
+.planBadge {
+  position: absolute;
+  left: 50%;
+  top: -15px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background: var(--secondary);
+  font-size: 10px;
+}
+.closingCta {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: var(--panel-radius);
+  padding: 58px 24px;
+  background:
+    radial-gradient(
+      ellipse at 50% 125%,
+      color-mix(in srgb, var(--primary) 15%, transparent),
+      transparent 65%
+    ),
+    var(--card);
+}
+@media (max-width: 850px) {
+  .hero {
+    padding-top: 150px;
+  }
+  .horizon {
+    width: 800px;
+    height: 800px;
+    top: 160px;
+  }
+}
+@media (max-width: 640px) {
+  .hero {
+    padding-top: 116px;
+  }
+  .atmosphere {
+    height: 700px;
+  }
+  .horizon {
+    top: 145px;
+    width: 560px;
+    height: 650px;
+  }
+  .beams {
+    width: 500px;
+    height: 270px;
+  }
+  .heroContent {
+    padding-inline: 1rem;
+  }
+  .heroContent h1 {
+    font-size: clamp(38px, 9.2vw, 57px);
+    margin-top: 24px;
+  }
+  .heroContent > p {
+    font-size: 13px;
+    max-width: 310px;
+    padding-inline: 5px;
+    margin-top: 20px;
+  }
+  .heroBadge {
+    font-size: 10px;
+  }
+  .heroActions {
+    gap: 9px;
+    margin-top: 25px;
+  }
+  .heroActions a {
+    padding-inline: 18px;
+    font-size: 12px;
+    height: 43px;
+  }
+  .atmosphere::after {
+    top: 440px;
+    width: 450px;
+  }
+  .stars {
+    top: 535px;
+  }
+  .valueStrip {
+    padding-top: 36px;
+  }
+  .plan,
+  .featuredPlan {
+    padding: 27px;
+  }
+  .featuredPlan {
+    margin-top: 12px;
+  }
+}

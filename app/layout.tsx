@@ -21,10 +21,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body className={GeistSans.variable + " font-sans antialiased"}>
         <Providers>
-          <a href="#main" className="sr-only focus:not-sr-only">
+          <a href="#main" className="skip-link sr-only focus:not-sr-only">
             Skip to content
           </a>
           <SiteHeader />
