@@ -1,26 +1,208 @@
 @import "tailwindcss";
-
+@custom-variant dark (&:is(.dark *));
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fcfcf9;
+  --foreground: #202921;
+  --card: #fff;
+  --card-foreground: #202921;
+  --primary: #3a6845;
+  --primary-foreground: #fff;
+  --secondary: #eef1e9;
+  --secondary-foreground: #2b4932;
+  --muted: #eff0eb;
+  --muted-foreground: #687067;
+  --border: #dfe4db;
+  --destructive: #b63838;
 }
-
+.dark {
+  --background: #111812;
+  --foreground: #edf1e9;
+  --card: #19221a;
+  --card-foreground: #edf1e9;
+  --primary: #b3d5a0;
+  --primary-foreground: #172619;
+  --secondary: #27362b;
+  --secondary-foreground: #d5e5cc;
+  --muted: #263128;
+  --muted-foreground: #a2b09e;
+  --border: #344036;
+  --destructive: #f28d8d;
+}
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --font-sans: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: var(--border);
 }
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+button:not(:disabled),
+summary {
+  cursor: pointer;
+}
+input,
+textarea,
+select {
+  color: inherit;
+}
+.shell {
+  width: min(1160px, calc(100% - 3rem));
+  margin-inline: auto;
+}
+.field {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 0.7rem;
+  background: var(--card);
+  padding: 0.7rem 0.9rem;
+  outline: none;
+}
+.field:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 20%, transparent);
+}
+label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.field-label {
+  display: grid;
+  gap: 0.5rem;
+}
+.eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--primary);
+}
+.nav-link {
+  color: var(--muted-foreground);
+}
+.nav-link:hover {
+  color: var(--foreground);
+}
+.course-art {
+  background:
+    radial-gradient(
+      ellipse at 25% 35%,
+      color-mix(in srgb, var(--primary) 20%, var(--secondary)),
+      transparent 60%
+    ),
+    repeating-linear-gradient(
+      135deg,
+      transparent,
+      transparent 24px,
+      color-mix(in srgb, var(--primary) 6%, transparent) 25px,
+      transparent 26px
+    ),
+    var(--secondary);
+}
+.prose-content {
+  line-height: 1.85;
+  overflow-wrap: anywhere;
+}
+.prose-content h1,
+.prose-content h2,
+.prose-content h3 {
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 1.5em 0 0.6em;
+}
+.prose-content h1 {
+  font-size: 2rem;
+}
+.prose-content h2 {
+  font-size: 1.5rem;
+}
+.prose-content h3 {
+  font-size: 1.2rem;
+}
+.prose-content p,
+.prose-content ul,
+.prose-content ol {
+  margin-bottom: 1rem;
+}
+.prose-content ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+}
+.prose-content ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+}
+.prose-content a {
+  color: var(--primary);
+  text-decoration: underline;
+}
+.prose-content pre {
+  overflow: auto;
+  background: var(--secondary);
+  padding: 1rem;
+  border-radius: 0.75rem;
+}
+.prose-content code {
+  font-size: 0.85em;
+  background: var(--secondary);
+  padding: 0.15rem 0.3rem;
+  border-radius: 0.25rem;
+}
+.prose-content blockquote {
+  border-left: 3px solid var(--primary);
+  padding-left: 1rem;
+  color: var(--muted-foreground);
+}
+.prose-content table {
+  display: block;
+  overflow: auto;
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+}
+.prose-content td,
+.prose-content th {
+  border: 1px solid var(--border);
+  padding: 0.5rem 1rem;
+}
+.tiptap {
+  min-height: 280px;
+  outline: none;
+  padding: 1rem;
+}
+progress {
+  accent-color: var(--primary);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+progress::-webkit-progress-bar {
+  background: var(--secondary);
+}
+progress::-webkit-progress-value {
+  background: var(--primary);
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    transition: none !important;
+  }
 }
