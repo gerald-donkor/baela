@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element -- ImageKit already transforms and signs these private images. */
 import Link from "next/link";
 import { ArrowUpRight, BookOpen } from "lucide-react";
+import { LearningProgress } from "@/components/ui/learning-progress";
 import { money } from "@/lib/utils";
 export function CourseCard({
   course,
@@ -22,7 +23,7 @@ export function CourseCard({
   return (
     <Link
       href={href || "/courses/" + course.slug}
-      className="group overflow-hidden rounded-2xl border bg-card hover:shadow-lg transition-shadow"
+      className="group overflow-hidden rounded-card border bg-card hover:border-primary/35 hover:shadow-[var(--shadow-glow)] transition-[border-color,box-shadow]"
     >
       <div className="course-art h-44 flex items-center justify-center">
         {course.coverId ? (
@@ -47,13 +48,7 @@ export function CourseCard({
           {course.summary}
         </p>
         {percentage !== undefined ? (
-          <div className="mt-5">
-            <div className="flex justify-between text-xs mb-2">
-              <span>Your progress</span>
-              <span>{percentage}%</span>
-            </div>
-            <progress className="w-full h-1.5" max={100} value={percentage} />
-          </div>
+          <LearningProgress value={percentage} className="mt-5" />
         ) : amount !== undefined ? (
           <p className="mt-5 text-sm font-medium">
             {money(amount)}{" "}

@@ -23,6 +23,8 @@ Without credentials the public site displays its real empty state, launch prices
 
 See the [current implementation checkpoint](docs/implementation-status.md) for continuation changes, checks, and remaining release gates.
 
+The [Horizon design system](docs/design-system.md) defines the shared visual language. Theme tokens live in `design/tokens.css`, reusable primitives in `components/ui/`, and a browsable gallery at `/design-system`.
+
 Read [launch configuration](docs/launch.md) before taking payments and [operations](docs/operations.md) for incident recovery.
 
 ## Commands
