@@ -1,0 +1,722 @@
+{
+  "captured_at_utc": "2026-10-02T17:21:58.670395+00:00",
+  "repository": "/home/dgk/Projects/next/baela",
+  "base_commit": "bf2f0ba162ef16b8e4a0f838428efaf010a17944",
+  "node_version": "v26.10.0",
+  "npm_version": "11.19.1",
+  "scope": "Git-tracked and nonignored working files, including untracked implementation; excludes handoff itself, secrets, dependencies and generated builds. Hashes preserve exact-state identity, not source copies.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "check": "npm run lint && npm run typecheck && npm test",
+    "verify:launch": "tsx scripts/verify-launch.ts"
+  },
+  "dependencies": {
+    "@dnd-kit/core": "6.3.1",
+    "@dnd-kit/sortable": "10.0.0",
+    "@dnd-kit/utilities": "3.2.2",
+    "@imagekit/next": "2.1.6",
+    "@imagekit/nodejs": "7.12.1",
+    "@neondatabase/auth": "0.5.0-beta",
+    "@neondatabase/serverless": "1.2.0",
+    "@polar-sh/sdk": "1.0.2",
+    "@sentry/nextjs": "11.2.0",
+    "@tiptap/extension-image": "3.31.4",
+    "@tiptap/extension-table": "3.31.4",
+    "@tiptap/markdown": "3.31.4",
+    "@tiptap/react": "3.31.4",
+    "@tiptap/starter-kit": "3.31.4",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "drizzle-orm": "0.45.3",
+    "geist": "1.7.2",
+    "hls.js": "1.7.3",
+    "lucide-react": "1.50.0",
+    "next": "16.3.8",
+    "next-themes": "0.4.6",
+    "radix-ui": "1.6.7",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-markdown": "10.1.0",
+    "remark-gfm": "4.0.1",
+    "server-only": "0.0.1",
+    "tailwind-merge": "3.7.0",
+    "ws": "8.22.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.8",
+    "@playwright/test": "1.63.0",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/ws": "8.18.2",
+    "drizzle-kit": "0.31.11",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.8",
+    "prettier": "3.9.9",
+    "tailwindcss": "^4",
+    "tsx": "4.23.15",
+    "typescript": "^5",
+    "vitest": "4.1.11"
+  },
+  "files": [
+    {
+      "path": ".env.example",
+      "bytes": 590,
+      "lines": 22,
+      "sha256": "1314a93612a09a90dba3789b91af7fbf441d93cff8a0cd894af376cde3845704"
+    },
+    {
+      "path": ".github/workflows/check.yml",
+      "bytes": 560,
+      "lines": 23,
+      "sha256": "1634944c904e02ac1f95e0bc3bbe0b6b052c4c39dc114e619fbabfbc6604b557"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 530,
+      "lines": 45,
+      "sha256": "20de9992789e0ae0f9e52c71053616f36b0e74e578bc11790f3606d0b8937f27"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 678,
+      "lines": 9,
+      "sha256": "63f2c50380ed6303237cce215ce27af1d620d094c215e28d1b1538a3c070e3bb"
+    },
+    {
+      "path": "CLAUDE.md",
+      "bytes": 11,
+      "lines": 1,
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49"
+    },
+    {
+      "path": "README.md",
+      "bytes": 5652,
+      "lines": 65,
+      "sha256": "9834cae56f05cf82a87b9556f6f2dd2161788a9d5fe3ff7c151a2ff419aa409a"
+    },
+    {
+      "path": "app/[legal]/page.tsx",
+      "bytes": 1231,
+      "lines": 44,
+      "sha256": "723157df5fa8931225e25932b533781ec5409c1093e0a36a9d8ef1c74c534b69"
+    },
+    {
+      "path": "app/account/page.tsx",
+      "bytes": 1298,
+      "lines": 41,
+      "sha256": "c9c45dae8dd7d6e337223b6a479279c8cdbc3a1af4dc90212897a0ce14e9418f"
+    },
+    {
+      "path": "app/admin/courses/[id]/page.tsx",
+      "bytes": 1591,
+      "lines": 57,
+      "sha256": "936e943f1ab47bd415454411f11744184e1e49c57551867feb13600672f4a850"
+    },
+    {
+      "path": "app/admin/jobs/page.tsx",
+      "bytes": 1718,
+      "lines": 51,
+      "sha256": "78547d9a83be7a00d1e72a28abcfab4abda0f75adc9534ad89bd9576e67af77f"
+    },
+    {
+      "path": "app/admin/layout.tsx",
+      "bytes": 1023,
+      "lines": 31,
+      "sha256": "ac180fc0543caebd24ebecbf186136dc2581a67dc4ee4bf58372bcfb60fdf8ea"
+    },
+    {
+      "path": "app/admin/page.tsx",
+      "bytes": 2096,
+      "lines": 61,
+      "sha256": "211f44032ae70ebe910e2c8f3ec199ed415c39728e6626833d829f034ccfd07b"
+    },
+    {
+      "path": "app/admin/preview/[id]/page.tsx",
+      "bytes": 1175,
+      "lines": 36,
+      "sha256": "c94788a853e4cb01698238f3187ee3a624b582c37e04fe4aa154d08a57a32213"
+    },
+    {
+      "path": "app/admin/refunds/page.tsx",
+      "bytes": 2712,
+      "lines": 75,
+      "sha256": "735b7e42294cb31db4f9f18be9d1237531004c70320e910d4d4b5a3fd44e61f7"
+    },
+    {
+      "path": "app/admin/settings/page.tsx",
+      "bytes": 3934,
+      "lines": 115,
+      "sha256": "d70493cb9874a58ed19b3333fcf9ef3e4a69e0b20c9f34a77d28c5da806d36f9"
+    },
+    {
+      "path": "app/admin/users/page.tsx",
+      "bytes": 2283,
+      "lines": 73,
+      "sha256": "b7e3f483f8002e8e4ee19808b17794ea68dfc3ac6b6f93d3a688f205ab559328"
+    },
+    {
+      "path": "app/api/account/route.ts",
+      "bytes": 4094,
+      "lines": 130,
+      "sha256": "f2aa6e91afdb097524b1a3c8b0f230b9815ae092266ad5a8add5f535f4225e8d"
+    },
+    {
+      "path": "app/api/admin/route.ts",
+      "bytes": 15411,
+      "lines": 456,
+      "sha256": "bf806e4f5fc44b544eccb550621b9fdb2efd6bfc8ded8e2616cc8be5067b0187"
+    },
+    {
+      "path": "app/api/admin/uploads/route.ts",
+      "bytes": 4341,
+      "lines": 125,
+      "sha256": "4904a29c4ea1a05267fbfa950898d32c0eed364cb44cfb2682807f8d749472a9"
+    },
+    {
+      "path": "app/api/auth/[...path]/route.ts",
+      "bytes": 330,
+      "lines": 8,
+      "sha256": "4bc77023f44f0f15a8a5b7843be91936ed0e487429a830a34d9f9e8563f03531"
+    },
+    {
+      "path": "app/api/checkout/route.ts",
+      "bytes": 6083,
+      "lines": 164,
+      "sha256": "7f16bb9da8679e1b16cd517d32d58b310b5c62cad3ecddf09b14b1ad3e8a2cef"
+    },
+    {
+      "path": "app/api/covers/[id]/route.ts",
+      "bytes": 1024,
+      "lines": 30,
+      "sha256": "2d662a7d7b6c2db2c7513f01f2216a766f02681cf5b0f733adc8e1de2c223508"
+    },
+    {
+      "path": "app/api/cron/route.ts",
+      "bytes": 1169,
+      "lines": 29,
+      "sha256": "dec595d2d72bf2c1ab32f8a7db2af85bbca1b35dacf6275323e7b8a43a8d7c3e"
+    },
+    {
+      "path": "app/api/media/sign/route.ts",
+      "bytes": 3722,
+      "lines": 104,
+      "sha256": "efafc639502bf8749e4659375bec15a0ff32f3a63ffeb6af792fe283383d143a"
+    },
+    {
+      "path": "app/api/progress/route.ts",
+      "bytes": 3730,
+      "lines": 104,
+      "sha256": "d5b94e1887ed7f98dacf0e53a89b8db6ccec244ea87081df14647f391b0b397b"
+    },
+    {
+      "path": "app/api/webhooks/polar/route.ts",
+      "bytes": 1297,
+      "lines": 37,
+      "sha256": "2f96d109a5d533b7841ae1f6fd5fc37f029bdb9181cac9ac7d1fd3e17e9b1c99"
+    },
+    {
+      "path": "app/auth/[view]/page.tsx",
+      "bytes": 846,
+      "lines": 34,
+      "sha256": "57b5f43bf645623b8f0ff42722ada18861b8e70870f746bcf74472d4254f9917"
+    },
+    {
+      "path": "app/checkout/success/page.tsx",
+      "bytes": 536,
+      "lines": 16,
+      "sha256": "5e5f1461811e739a8da17faf317819d0363875a21c07fd5fa49d349155df4199"
+    },
+    {
+      "path": "app/courses/[courseSlug]/page.tsx",
+      "bytes": 5078,
+      "lines": 130,
+      "sha256": "f7f25c1ee270173694f961f0ed5086fc284205ba556cf326dced1f825fdc0b86"
+    },
+    {
+      "path": "app/dashboard/page.tsx",
+      "bytes": 4581,
+      "lines": 126,
+      "sha256": "aaa07d8b6d10fbfbf0006c66573d50431393d31ad280893fef931d6f8103d060"
+    },
+    {
+      "path": "app/error.tsx",
+      "bytes": 627,
+      "lines": 24,
+      "sha256": "c4398599f13d0fb4bd93a33432a8f05ee6e5a96492478c743d937af7fbb8bb24"
+    },
+    {
+      "path": "app/favicon.ico",
+      "bytes": 25931,
+      "lines": null,
+      "sha256": "2b8ad2d33455a8f736fc3a8ebf8f0bdea8848ad4c0db48a2833bd0f9cd775932"
+    },
+    {
+      "path": "app/global-error.tsx",
+      "bytes": 577,
+      "lines": 25,
+      "sha256": "34af03dfd5bfd0623657e095259b3322899f36215a4b04b723f98ece5d09f39b"
+    },
+    {
+      "path": "app/globals.css",
+      "bytes": 4255,
+      "lines": 208,
+      "sha256": "b9751356b3144971cd66a357102fb1ca7e50653baecb1d118c10db4cd46d516a"
+    },
+    {
+      "path": "app/layout.tsx",
+      "bytes": 1139,
+      "lines": 39,
+      "sha256": "d156ec40382d5cfd3d59839c3a87053fe11a7b7137e5becc425b5d61d9e08be0"
+    },
+    {
+      "path": "app/learn/[courseSlug]/[lessonId]/page.tsx",
+      "bytes": 5627,
+      "lines": 163,
+      "sha256": "046d16e8bad7f2630ef6366270a18d18c0558f3a3fd38c36fdaf961d6e306c47"
+    },
+    {
+      "path": "app/loading.tsx",
+      "bytes": 302,
+      "lines": 9,
+      "sha256": "721485dca34545cd45f37ab961d6a5af39e5b28aaf7a631dd707f08269a86948"
+    },
+    {
+      "path": "app/not-found.tsx",
+      "bytes": 508,
+      "lines": 16,
+      "sha256": "61d9fe6be4640577c9166187d582c73d0613e848c2c05b6e57776d8cd1662e17"
+    },
+    {
+      "path": "app/opengraph-image.tsx",
+      "bytes": 865,
+      "lines": 29,
+      "sha256": "23cfd4505454abcbf32ef6fc0ff3b1fa9fa0b0df123c92abc050b2b2b4063062"
+    },
+    {
+      "path": "app/page.tsx",
+      "bytes": 9191,
+      "lines": 227,
+      "sha256": "cecc1cb8db8bf052eccf05a56e918d3310b1bd19c3622f82dbb53d2e6518d110"
+    },
+    {
+      "path": "app/robots.ts",
+      "bytes": 414,
+      "lines": 20,
+      "sha256": "d10dc3ea970511f92fb4be2d51ac63020b8093f09fee698f1efe3ddfd0a9bd2e"
+    },
+    {
+      "path": "app/sitemap.ts",
+      "bytes": 452,
+      "lines": 13,
+      "sha256": "3968465e3e5d0d1d89c7155c2f5526be652ed97d297764514d8b2528af243d46"
+    },
+    {
+      "path": "app/support/page.tsx",
+      "bytes": 747,
+      "lines": 21,
+      "sha256": "2b93434be5974a4c92c5782fcf3ab3eb0fd64f667a7c7d283196ab68fbc8114e"
+    },
+    {
+      "path": "components.json",
+      "bytes": 409,
+      "lines": 20,
+      "sha256": "1cc77dc3fb67d2dd7534c94d272ffba64ea471223a5c5c8bc03facccf893baa9"
+    },
+    {
+      "path": "components/account-panel.tsx",
+      "bytes": 6869,
+      "lines": 211,
+      "sha256": "5d9c040f3e3858280d75433bfdf73eafeca76d9ba22cc9b124c020fe1db8cd2d"
+    },
+    {
+      "path": "components/admin/client.ts",
+      "bytes": 344,
+      "lines": 11,
+      "sha256": "e45e9eee3ea5d2d53fa8d67dac0036fdf2804cb231751c59a126c14b4ac46a21"
+    },
+    {
+      "path": "components/admin/command-form.tsx",
+      "bytes": 1624,
+      "lines": 59,
+      "sha256": "c765dc8b94461c4192886c7b3f657175739de39be27f4770a300bc3ff1e5cf89"
+    },
+    {
+      "path": "components/admin/course-editor.tsx",
+      "bytes": 13655,
+      "lines": 448,
+      "sha256": "2f389abcb9e4829ac9d464279596c87c1b8e1dca9d36486f98cfe30f70e8e9a7"
+    },
+    {
+      "path": "components/admin/markdown-editor.tsx",
+      "bytes": 3520,
+      "lines": 113,
+      "sha256": "de0b0ba760a6d1d9c736e74829b49b720bc6949686a929814fdaea4f37010a62"
+    },
+    {
+      "path": "components/admin/sortable-list.tsx",
+      "bytes": 2154,
+      "lines": 84,
+      "sha256": "c9d5628be9aa487326e017f2f81a66be8e86201c9782942cfa9b172396e020bb"
+    },
+    {
+      "path": "components/admin/uploader.tsx",
+      "bytes": 4456,
+      "lines": 154,
+      "sha256": "22e92dae2998032f45ed03bfb1e65ac0c079022dfa89a96ff5fd506e30da275d"
+    },
+    {
+      "path": "components/auth-form.tsx",
+      "bytes": 6472,
+      "lines": 202,
+      "sha256": "93d96f90157e634f350318579073ba482933956786e5ad7651e17d446f08dfd8"
+    },
+    {
+      "path": "components/checkout-button.tsx",
+      "bytes": 1527,
+      "lines": 61,
+      "sha256": "eafade5dc0303a6a4fea13f1ae2235ff33139ea1d8f91c7bc75a72ad13bfcb16"
+    },
+    {
+      "path": "components/checkout-status.tsx",
+      "bytes": 1702,
+      "lines": 48,
+      "sha256": "c45084502c7b4623d73292c1e7769951fc42d84797b7953c5adcdccccf2d504c"
+    },
+    {
+      "path": "components/course-card.tsx",
+      "bytes": 2059,
+      "lines": 68,
+      "sha256": "a01554553e8268fe80cedfffeda3ae88211b7b1bd8ea7307cb944bd908fe71cb"
+    },
+    {
+      "path": "components/lesson-player.tsx",
+      "bytes": 8896,
+      "lines": 296,
+      "sha256": "afcaf36c15e5ffd4ba261753193279a3b4cd5bfe5f30b98d71b9113d40f8905d"
+    },
+    {
+      "path": "components/markdown.tsx",
+      "bytes": 457,
+      "lines": 18,
+      "sha256": "6911c06f36f14c4f8ca60470f62a313f25178c3ac1622f02f5edbde0fef023df"
+    },
+    {
+      "path": "components/providers.tsx",
+      "bytes": 316,
+      "lines": 14,
+      "sha256": "9418b74bc2a8ad40aa8e44b255268eae06dec6c11c8b97cd4c2fa1b58b0fa7c5"
+    },
+    {
+      "path": "components/site-footer.tsx",
+      "bytes": 835,
+      "lines": 26,
+      "sha256": "64a71f82317704818158f0cb261d5f1f38673ec5fff10dc993276b300f813e20"
+    },
+    {
+      "path": "components/site-header.tsx",
+      "bytes": 1476,
+      "lines": 47,
+      "sha256": "b76a9deaeea4c297cf07a90a75b9f69a12fd844765f8f0949ed322cd218923b8"
+    },
+    {
+      "path": "components/theme-toggle.tsx",
+      "bytes": 531,
+      "lines": 18,
+      "sha256": "3418d36b7ceb4ff315505ffdebb2a0c06c23dccf614df12aa8671bc83c40aaf1"
+    },
+    {
+      "path": "components/ui/button.tsx",
+      "bytes": 1429,
+      "lines": 43,
+      "sha256": "cbba7cb926c87e3a839e22d15e1c256394bedd8e5ece9687e797acb1b02eb009"
+    },
+    {
+      "path": "components/ui/card.tsx",
+      "bytes": 469,
+      "lines": 19,
+      "sha256": "08e32b5366fc819f078f852d58ccfb779809976783d2b38c4e4a109130cae24f"
+    },
+    {
+      "path": "docs/launch.md",
+      "bytes": 6002,
+      "lines": 65,
+      "sha256": "70857d96a34d9267eb09c3ca77bac4fe5abbce1e836557a2035cb18b3bf73db1"
+    },
+    {
+      "path": "docs/operations.md",
+      "bytes": 3238,
+      "lines": 31,
+      "sha256": "c365c230a1d41847cc9b8bc63f8ee106ca7a30a0a0e6ef4fe7bae5c00513dbc9"
+    },
+    {
+      "path": "drizzle.config.ts",
+      "bytes": 321,
+      "lines": 11,
+      "sha256": "b5c7aa0edea03c7f5a21e4f2510a909a0dfcedec48388a932804496a117df0eb"
+    },
+    {
+      "path": "drizzle/0000_illegal_betty_ross.sql",
+      "bytes": 11127,
+      "lines": 217,
+      "sha256": "196b5d8d481b12b94845c75f105fad60dead008fcd6b38aab80bccefeb9df8e5"
+    },
+    {
+      "path": "drizzle/0001_crazy_krista_starr.sql",
+      "bytes": 51,
+      "lines": 1,
+      "sha256": "9d25e62f417d4bcc45bfcde57928bd877d978a1964a3b65363bd2a26f3134d97"
+    },
+    {
+      "path": "drizzle/meta/0000_snapshot.json",
+      "bytes": 38935,
+      "lines": 1530,
+      "sha256": "fa1cbe349b137761f59de014f1432f93402ae87c23b54285b2191ba6074b03d5"
+    },
+    {
+      "path": "drizzle/meta/0001_snapshot.json",
+      "bytes": 39088,
+      "lines": 1536,
+      "sha256": "0feec3c47a9c0fab9839cdcdd3c060f085e41721968ae6f274bbe4068bb145ce"
+    },
+    {
+      "path": "drizzle/meta/_journal.json",
+      "bytes": 358,
+      "lines": 20,
+      "sha256": "1af352082f2d9aa8966e3a21501d7192af66952ead23b0aa3e053a6bd7044e72"
+    },
+    {
+      "path": "eslint.config.mjs",
+      "bytes": 465,
+      "lines": 18,
+      "sha256": "870f1adccecf3051cbcd9fd307cef51d7633cf510979c181a81f4b1797273493"
+    },
+    {
+      "path": "instrumentation-client.ts",
+      "bytes": 750,
+      "lines": 28,
+      "sha256": "857cfb9f8cbab376a1a0e666184edec2dc55ee08fc7703252e95380a5c4fd4bf"
+    },
+    {
+      "path": "instrumentation.ts",
+      "bytes": 226,
+      "lines": 6,
+      "sha256": "aaef8587e0257a75d683e2a6167193b21e48a958677c409fb9a058302f9ece97"
+    },
+    {
+      "path": "lib/auth/client.ts",
+      "bytes": 120,
+      "lines": 3,
+      "sha256": "93e637276444d6df3a37e2889440d953928f2f916565d0fa4e45ce2080cc3fba"
+    },
+    {
+      "path": "lib/auth/server.ts",
+      "bytes": 2151,
+      "lines": 65,
+      "sha256": "24bf14a64e2d5b1b401751731ebdf24846c69b6c6f97ff5a06c0322495ce6966"
+    },
+    {
+      "path": "lib/config.ts",
+      "bytes": 613,
+      "lines": 21,
+      "sha256": "c91bde9379ab237fe7c808c44da2b031ded19f8cf4a1cca41cf9940695b4f15b"
+    },
+    {
+      "path": "lib/db/index.ts",
+      "bytes": 804,
+      "lines": 22,
+      "sha256": "b5841dd1cf0cf63d4c5c8a89fe1ff4436b5a0ae98096127b364bee904f91b968"
+    },
+    {
+      "path": "lib/db/schema.ts",
+      "bytes": 8920,
+      "lines": 271,
+      "sha256": "e693d7088c129addca5677fab887df5ff636457e7309a289237b6e4bbe53ef31"
+    },
+    {
+      "path": "lib/domain/access.ts",
+      "bytes": 1542,
+      "lines": 50,
+      "sha256": "0a72f162f65630d7bf43a4c8846ef49fc9e3f631fb7715b7ce91060ba732db85"
+    },
+    {
+      "path": "lib/domain/media.ts",
+      "bytes": 1217,
+      "lines": 42,
+      "sha256": "11db0535cb56e496f8ee0ef32706879998b595de39aca5b260725450bf143672"
+    },
+    {
+      "path": "lib/domain/progress.ts",
+      "bytes": 1011,
+      "lines": 32,
+      "sha256": "793fd8b85ee5bda10bdadf1e8704f8cf7b2a8ea5a87f7c6e2ab896ea1b8dd06d"
+    },
+    {
+      "path": "lib/http.ts",
+      "bytes": 1292,
+      "lines": 44,
+      "sha256": "89c954a8588ae96bea724d878a3261c0f46314a483b6989ab32c3e3d5ac09ad9"
+    },
+    {
+      "path": "lib/server/catalog.ts",
+      "bytes": 4543,
+      "lines": 149,
+      "sha256": "9fe51c8f57ce641ee3ea244d33eea779a0d1bcb919135ba145df9ae9d9688494"
+    },
+    {
+      "path": "lib/server/imagekit.ts",
+      "bytes": 520,
+      "lines": 18,
+      "sha256": "9093a744f69fcc9b4d901690ac0950fedb32fc3df245959055aa59887144092c"
+    },
+    {
+      "path": "lib/server/jobs.ts",
+      "bytes": 15630,
+      "lines": 474,
+      "sha256": "7dc4997e6ecca59e51a61d26e247b0702a9bc5218c1ff001f8cb7dd1dd1478c0"
+    },
+    {
+      "path": "lib/server/polar.ts",
+      "bytes": 2366,
+      "lines": 86,
+      "sha256": "34278f3324dd1216062f47685fff02c792dafab007c0950fefa830363559dd6d"
+    },
+    {
+      "path": "lib/server/rate-limit.ts",
+      "bytes": 1005,
+      "lines": 30,
+      "sha256": "cd07b834c9eb6eed07af658cbfef6ea51106c21bde33a389ab159c17f3594552"
+    },
+    {
+      "path": "lib/utils.ts",
+      "bytes": 410,
+      "lines": 14,
+      "sha256": "c2d699e3cc4370aa41ab98eaf8b1fb5294c9e9777915a81c133e77213d42be44"
+    },
+    {
+      "path": "next.config.ts",
+      "bytes": 642,
+      "lines": 22,
+      "sha256": "7158573fb35dc60910f3be6fd0cb1866d64d51da789c662e56cc2f44f1b0bd64"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 608109,
+      "lines": 17200,
+      "sha256": "0fe2881212d1d1f3dbfdadbbdb4e297221eea4dbdfd2eab1966855571888596a"
+    },
+    {
+      "path": "package.json",
+      "bytes": 1932,
+      "lines": 69,
+      "sha256": "1b1d19ab8436229710dbe07a2d4b9e56a044df0b79c0c241e7813ed6d37a161c"
+    },
+    {
+      "path": "playwright.config.ts",
+      "bytes": 663,
+      "lines": 22,
+      "sha256": "eef6dc0928de8e17870496f612859a470432a883a5302d0cff6cc57c94c757aa"
+    },
+    {
+      "path": "postcss.config.mjs",
+      "bytes": 94,
+      "lines": 7,
+      "sha256": "dfac7ac2d86d326a0e5adb024e7943c181393ed17a5fcb8f0315b24c7da6ddde"
+    },
+    {
+      "path": "public/file.svg",
+      "bytes": 391,
+      "lines": 1,
+      "sha256": "2b67812c325c199a02536cdbeea0c593a72f707d323b72ee3e08dbab06753bd4"
+    },
+    {
+      "path": "public/globe.svg",
+      "bytes": 1035,
+      "lines": 1,
+      "sha256": "b614b9bf183925957661ac851498fe1d8029fd43a62fbfed86f9e2624a57e7cf"
+    },
+    {
+      "path": "public/next.svg",
+      "bytes": 1375,
+      "lines": 1,
+      "sha256": "55995dfad6ecb4945a1e856ddca03c5e16aa5bf13fd21b4df6a74ae79357bcfc"
+    },
+    {
+      "path": "public/vercel.svg",
+      "bytes": 128,
+      "lines": 1,
+      "sha256": "f081337b2fee635b455b63275406a3e7f39d6a014e25ad90dab5a67e62a12ac4"
+    },
+    {
+      "path": "public/window.svg",
+      "bytes": 385,
+      "lines": 1,
+      "sha256": "644768c4aaeb4767bce293344eeb0c125fb804a94d801440424072202d85e3a1"
+    },
+    {
+      "path": "scripts/verify-launch.ts",
+      "bytes": 3018,
+      "lines": 81,
+      "sha256": "2ddac0e8cbd769c3f2be69f5631c1cb83e4744f762e0bec0a7955633af2345a7"
+    },
+    {
+      "path": "sentry.server.config.ts",
+      "bytes": 520,
+      "lines": 22,
+      "sha256": "af7db68bc0be023c86b2be11aaaf0ddc7e8f6386bed77bafdad8c5cf23e476fa"
+    },
+    {
+      "path": "tests/domain.test.ts",
+      "bytes": 4446,
+      "lines": 157,
+      "sha256": "30e78e54b5c39ea7c858cf5165d83ca808197c3faca1dc1d0eaa7b24c17fa282"
+    },
+    {
+      "path": "tests/e2e/public.spec.ts",
+      "bytes": 2396,
+      "lines": 69,
+      "sha256": "fa48a515419874b55b1a97d1b8f48cae352ab2650f2f9e7275ecbba2e06054f6"
+    },
+    {
+      "path": "tests/integration.test.ts",
+      "bytes": 14108,
+      "lines": 453,
+      "sha256": "8a365e35872a6dc2ab38eb53396f21fbecab46a8a8bd551a120f25b6c0183cd1"
+    },
+    {
+      "path": "tests/server-only.ts",
+      "bytes": 11,
+      "lines": 1,
+      "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+    },
+    {
+      "path": "tsconfig.json",
+      "bytes": 666,
+      "lines": 34,
+      "sha256": "be18523b23b78b6e1a876ddd107d330f0168bddf09d751b57e0b5edce69c66f3"
+    },
+    {
+      "path": "vercel.json",
+      "bytes": 64,
+      "lines": 1,
+      "sha256": "d36d12d4c2cd990f1abe461a2333d9eb47f833d912cdf2cbdf0059a59a238067"
+    },
+    {
+      "path": "vitest.config.ts",
+      "bytes": 475,
+      "lines": 19,
+      "sha256": "787863a20cff2f805aee401b1e1e2711449b47e6ac81918d690f66742a4e6b1c"
+    }
+  ]
+}
