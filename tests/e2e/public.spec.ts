@@ -115,6 +115,91 @@ test("mobile navigation opens and closes after choosing a destination", async ({
   ).toHaveCount(0);
 });
 
+test("mobile navigation dismisses with Escape, outside interaction, and a wider viewport", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  const toggle = page.getByRole("button", { name: "Open navigation" });
+  const menu = page.getByRole("navigation", { name: "Mobile navigation" });
+  await toggle.click();
+  await menu.getByRole("link", { name: "Courses", exact: true }).focus();
+  await page.keyboard.press("Escape");
+  await expect(menu).toHaveCount(0);
+  await expect(toggle).toBeFocused();
+
+  await toggle.click();
+  await page.getByText("At your pace. On your terms.", { exact: true }).click();
+  await expect(menu).toHaveCount(0);
+
+  await toggle.click();
+  await menu.getByRole("link", { name: "Sign in" }).focus();
+  await page.keyboard.press("Tab");
+  await expect(menu).toHaveCount(0);
+
+  await toggle.click();
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await expect(menu).toHaveCount(0);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+});
+
+test("all account navigation variants fit without overlapping in both themes", async ({
+  page,
+}) => {
+  await page.goto("/design-system");
+  for (const theme of ["dark", "light"]) {
+    if (theme === "light") {
+      await page
+        .getByRole("banner")
+        .getByRole("button", { name: "Toggle light and dark appearance" })
+        .click();
+    }
+    for (const width of [320, 360, 768, 1024, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      for (const label of [
+        "Visitor navigation",
+        "Student navigation",
+        "Admin navigation",
+      ]) {
+        const header = page.getByRole("group", { name: label, exact: true });
+        expect(
+          await header.evaluate((element) => {
+            const container = element.getBoundingClientRect();
+            const controls = Array.from(element.querySelectorAll("a, button"))
+              .map((control) => control.getBoundingClientRect())
+              .filter((box) => box.width > 0 && box.height > 0);
+            return controls.every(
+              (box, index) =>
+                box.left >= container.left &&
+                box.right <= container.right &&
+                controls
+                  .slice(index + 1)
+                  .every(
+                    (other) =>
+                      box.right <= other.left ||
+                      other.right <= box.left ||
+                      box.bottom <= other.top ||
+                      other.bottom <= box.top,
+                  ),
+            );
+          }),
+          `${label} at ${width}px in ${theme} mode`,
+        ).toBe(true);
+        if (width >= 1024) {
+          await expect(
+            header.getByRole("navigation", { name: "Main navigation" }),
+          ).toBeVisible();
+        } else {
+          await expect(
+            header.getByRole("button", { name: "Open navigation" }),
+          ).toBeVisible();
+        }
+      }
+    }
+  }
+});
+
 test("review stories and FAQ answers are usable by keyboard", async ({
   page,
 }) => {
@@ -128,6 +213,8 @@ test("review stories and FAQ answers are usable by keyboard", async ({
   const featured = reviews.getByRole("figure", {
     name: "Featured sample review",
   });
+  const announcement = featured.getByRole("status");
+  const announcementNode = await announcement.elementHandle();
   await expect(featured.getByText("Maya Chen", { exact: true })).toBeVisible();
   const next = reviews.getByRole("button", { name: "Next sample review" });
   await next.focus();
@@ -135,6 +222,14 @@ test("review stories and FAQ answers are usable by keyboard", async ({
   await expect(
     featured.getByText("Amara Okafor", { exact: true }),
   ).toBeVisible();
+  await expect(announcement).toContainText("Amara Okafor:");
+  expect(
+    await announcement.evaluate(
+      (element, original) => element === original,
+      announcementNode,
+    ),
+  ).toBe(true);
+  await announcementNode?.dispose();
   await page.keyboard.press("Enter");
   await expect(featured.getByText("Nina Patel", { exact: true })).toBeVisible();
   await page.keyboard.press("Enter");
@@ -160,6 +255,42 @@ test("review stories and FAQ answers are usable by keyboard", async ({
   await expect(
     faq.getByRole("link", { name: "interactive demo", exact: true }),
   ).toBeHidden();
+});
+
+test("review controls have room for touch and respect reduced motion", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 844 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const featured = page.getByRole("figure", {
+    name: "Featured sample review",
+  });
+  for (const button of await featured.getByRole("button").all()) {
+    const box = await button.boundingBox();
+    expect(box?.width).toBeGreaterThanOrEqual(44);
+    expect(box?.height).toBeGreaterThanOrEqual(44);
+  }
+  const initialHeight = (await featured.boundingBox())!.height;
+  await featured.getByRole("button", { name: "Next sample review" }).click();
+  expect((await featured.boundingBox())!.height).toBeCloseTo(initialHeight, 1);
+  const quote = featured.locator("blockquote");
+  expect(
+    await quote.evaluate(
+      (element) => getComputedStyle(element.parentElement!).animationName,
+    ),
+  ).toBe("none");
+  await featured.getByRole("button", { name: "Next sample review" }).click();
+  expect((await featured.boundingBox())!.height).toBeCloseTo(initialHeight, 1);
+  const caption = featured.locator("figcaption");
+  expect(
+    await caption.evaluate((element) => element.parentElement?.tagName),
+  ).toBe("FIGURE");
+  expect(
+    await caption.evaluate(
+      (element) => element.parentElement?.lastElementChild === element,
+    ),
+  ).toBe(true);
 });
 
 test("buttons and expandable controls show a pointer without enabling closed enrollment", async ({
@@ -213,6 +344,7 @@ test("the design system gallery shares theme tokens and accessible progress", as
   await page.getByLabel("Example text input").fill("Learning something new");
   await page.getByLabel("Example selection").selectOption("daily");
   await page
+    .getByRole("banner")
     .getByRole("button", { name: "Toggle light and dark appearance" })
     .click();
   await expect(page.locator("html")).toHaveClass("light");
