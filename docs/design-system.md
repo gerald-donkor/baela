@@ -37,27 +37,28 @@ New visitors see dark mode. The header toggle allows light mode; `next-themes` p
 - **Section titles:** `text-3xl sm:text-4xl font-medium tracking-[-.045em]` through `SectionHeading`.
 - **Card titles:** 18–20px, medium/semibold, tight tracking.
 - **Body:** 14–16px with 1.7–1.85 line height. Use `text-muted-foreground` for secondary copy.
-- **Metadata:** 12px. The scaled product demo uses smaller labels; regular application interfaces should retain readable 12–14px labels.
-- **Eyebrow:** `.eyebrow` uses 11px, uppercase, 0.18em tracking, primary color.
+- **Metadata:** 12px. The interactive demo uses 12px labels and 13–14px reading and control text; only its decorative window bar reduces to 11px on mobile.
+- **Eyebrow:** `.eyebrow` uses 12px, sentence case, medium weight, and primary color. Keep these labels short and useful; step numbers belong to the learning sequence.
 - **Spacing:** Tailwind's 4px grid. Use 16–24px gaps, 24–32px card padding, 64–96px section spacing.
 - **Container:** `.shell` caps content at `--page-width: 1120px`; gutters are 24px, falling to 16px on small screens.
 - **Radii:** `rounded-control` = 10px; `rounded-card` = 16px; `rounded-panel` = 24px. Pills are for badges and circular indicators.
 
 ## Components
 
-| Component                 | API / guidance                                                                                                                                                                                             |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Brand`                   | Shared star mark and Baela wordmark. Wrap in a home link with `aria-label="Baela home"`.                                                                                                                   |
-| `Button`                  | `variant`: default, secondary, outline, ghost, destructive. `size`: default, sm, lg, icon. Use `asChild` for links. Primary gets a subtle blue gradient and inset highlight.                               |
-| `Card` / `CardContent`    | Theme-aware surface and fine outline. `CardContent` provides 24px padding.                                                                                                                                 |
-| `Badge`                   | `variant`: default, muted, success. A compact status pill; use explicit readable text.                                                                                                                     |
-| `SectionHeading`          | Required `eyebrow` and `title`; optional `description`, `centered`, `className`, `id`.                                                                                                                     |
-| `LearningProgress`        | `value` (0–100), optional `label` and `className`. Clamps invalid values and supplies an accessible native progress bar with percentage.                                                                   |
-| `CourseCard`              | Real course title, summary, optional cover/price/progress. Supports an explicit `href`. Shares tokens with the dashboard.                                                                                  |
-| `.field` / `.field-label` | Theme-aware inputs, selects, textareas, and label spacing with visible focus.                                                                                                                              |
-| `LessonCurriculum`        | Existing desktop sidebar and mobile dialog inherit the palette; selected, completed, and locked states remain explicit.                                                                                    |
-| `TestimonialCard`         | `review`: name, role, local image, quote, subject, highlight. Theme-aware review surface with portrait, star row, and hover light. `ReviewAuthor` and `ReviewStars` can be composed into a featured story. |
-| `Faq`                     | `items`: question / ReactNode answer pairs; optional `className`. Native `details` and `summary` provide keyboard-accessible disclosure without client JavaScript.                                         |
+| Component                 | API / guidance                                                                                                                                                                                                   |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Brand`                   | Shared star mark and Baela wordmark. Wrap in a home link with `aria-label="Baela home"`.                                                                                                                         |
+| `Button`                  | `variant`: default, secondary, outline, ghost, destructive. `size`: default, sm, lg, icon. Use `asChild` for links. Icon controls have a 44px target; primary actions use the semantic fill and inset highlight. |
+| `SiteHeaderContent`       | Shared header presentation with `signedIn` and `admin` props. `SiteHeader` supplies the real session; the gallery renders all three account variants for responsive inspection.                                  |
+| `Card` / `CardContent`    | Theme-aware surface and fine outline. `CardContent` provides 24px padding.                                                                                                                                       |
+| `Badge`                   | `variant`: default, muted, success. A compact status pill; use explicit readable text.                                                                                                                           |
+| `SectionHeading`          | Required `eyebrow` and `title`; optional `description`, `centered`, `className`, `id`.                                                                                                                           |
+| `LearningProgress`        | `value` (0–100), optional `label` and `className`. Clamps invalid values and supplies an accessible native progress bar with percentage.                                                                         |
+| `CourseCard`              | Real course title, summary, optional cover/price/progress. Supports an explicit `href`. Shares tokens with the dashboard.                                                                                        |
+| `.field` / `.field-label` | Theme-aware inputs, selects, textareas, and label spacing with visible focus.                                                                                                                                    |
+| `LessonCurriculum`        | Existing desktop sidebar and mobile dialog inherit the palette; selected, completed, and locked states remain explicit.                                                                                          |
+| `TestimonialCard`         | `review`: name, role, local image, quote, subject. Quiet theme-aware review surface with portrait and star row. `ReviewAuthor` and `ReviewStars` can be composed into a featured story.                          |
+| `Faq`                     | `items`: question / ReactNode answer pairs; optional `className`. Native `details` and `summary` provide keyboard-accessible disclosure without client JavaScript.                                               |
 
 ```tsx
 import { Card, CardContent } from "@/components/ui/card";
@@ -91,7 +92,7 @@ Use restrained surfaces in learning screens. Reserve the large horizon, broad gl
 
 ## Interaction and accessibility
 
-Use real links for navigation and buttons for state changes. Keep focus rings visible, icon-only controls labeled, inputs associated with labels, and progress labeled. Use a single H1 and ordered heading levels. The mobile navigation exposes `aria-expanded`; the skip link targets the main content. Honor `prefers-reduced-motion`. No demo animation auto-plays.
+Use real links for navigation and buttons for state changes. Keep focus rings visible, icon-only controls labeled, inputs associated with labels, and progress labeled. Use a single H1 and ordered heading levels. The mobile navigation exposes `aria-expanded` and a unique disclosure ID. Escape closes it and returns focus to the trigger; outside interaction, moving focus away, choosing a destination, and resizing to desktop dismiss it. It uses a disclosure rather than a modal focus trap. The skip link targets the main content. Honor `prefers-reduced-motion`. No demo animation auto-plays.
 
 Buttons, links, selects, checkbox/radio inputs, and expandable summaries use a pointer cursor. The shared `Button` declares it explicitly, including when rendered through `asChild`. Disabled buttons keep native disabled behavior and opacity; they do not use `pointer-events: none`, which would pass hovering through to the default page cursor.
 
@@ -99,11 +100,13 @@ The landing preview is explicitly labeled **Interactive demo / Sample content**.
 
 ## Reviews and FAQ patterns
 
-`DeveloperReviews` adds a staggered three-column wall and a larger featured quote. The layout was inspired by [21st.dev’s Testimonials with Marquee](https://21st.dev/@serafimcloud/components/testimonials-with-marquee) and its [testimonial section guide](https://mcp.21st.dev/blog/react-testimonial-section-components), implemented locally using existing components and CSS. It adds no animation-library dependency. Featured stories advance only through user actions; labeled arrows and selection buttons work with the keyboard, and updates use a polite live region. Story transitions respect reduced-motion settings.
+`DeveloperReviews` adds a staggered three-column wall and a larger featured quote. Tablet rows use at most two columns; mobile stories stack. The layout was inspired by [21st.dev’s Testimonials with Marquee](https://21st.dev/@serafimcloud/components/testimonials-with-marquee) and its [testimonial section guide](https://mcp.21st.dev/blog/react-testimonial-section-components), implemented locally using existing components and CSS. It adds no animation-library dependency. Featured stories advance only through user actions; labeled arrows and selection buttons have 44px touch targets and work with the keyboard. A persistent polite status region announces the author and quote, while the visible figure caption stays a direct child of the figure. Story transitions respect reduced-motion settings. Passive review cards do not animate or glow on hover.
 
 Review data lives in `components/landing/reviews-data.ts`. Names, developer roles, quotes, and star ratings are illustrative, visibly labeled **Sample reviews · fictional profiles**. Portraits are locally served stock photos; see `public/images/community/README.md`. Replace the data with consented, verified student feedback before presenting the section as actual endorsements. Do not attach structured-data ratings or claim learner counts to the sample content.
 
 `LearningFaq` uses the reusable `Faq` with six product questions. Keep answers aligned with implemented access, account, preview, and enrollment behavior. On mobile, the intro and disclosures stack; regular application FAQ text uses readable 13–14px type.
+
+The Open Graph image uses bundled Geist, the midnight palette, and the horizon. `app/icon.svg` is the editable star-mark source; `app/favicon.ico` contains 16px, 32px, and 48px versions of the same mark. Both are served through Next.js metadata file conventions.
 
 ## Extending the system
 
