@@ -97,9 +97,9 @@ export default async function Home() {
       </div>
       <section id="how-it-works" className="shell py-20 sm:py-24">
         <SectionHeading
-          eyebrow="Built around the way you learn"
-          title="Less friction. More possibility."
-          description="A calm space for focused learning, from your first spark of curiosity to the moment it clicks."
+          eyebrow="How learning works"
+          title="A course. A lesson. A new skill."
+          description="Choose a course, work through its lessons, and put what you learn into practice."
           centered
         />
         <div className="grid gap-4 md:grid-cols-3">
@@ -146,7 +146,7 @@ export default async function Home() {
         <div className="flex flex-wrap items-end justify-between gap-5 mb-10">
           <SectionHeading
             className="mb-0"
-            eyebrow="The course collection"
+            eyebrow="Courses"
             title="Find your next starting point."
             description="New perspectives. Practical skills. Your kind of learning."
           />
@@ -190,7 +190,7 @@ export default async function Home() {
       <DeveloperReviews />
       <section id="pricing" className="shell pt-16 pb-10 sm:pt-24">
         <SectionHeading
-          eyebrow="Room for every kind of learner"
+          eyebrow="Access options"
           title="Choose how you learn."
           description="Start with one course, or make the whole collection yours."
           centered

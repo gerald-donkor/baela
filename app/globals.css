@@ -95,10 +95,8 @@ label {
   gap: 0.5rem;
 }
 .eyebrow {
-  font-size: 0.7rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 500;
   color: var(--primary);
 }
 .nav-link {

@@ -80,7 +80,7 @@ export function LearningDemo() {
       <div className={styles.workspace}>
         <aside className={styles.sidebar}>
           <Brand className="text-lg" />
-          <p className={styles.sidebarLabel}>WORKSPACE</p>
+          <p className={styles.sidebarLabel}>Workspace</p>
           <button
             className={view === "overview" ? styles.activeNav : styles.nav}
             onClick={() => setView("overview")}
@@ -113,24 +113,25 @@ export function LearningDemo() {
         <div className={styles.main}>
           <div className={styles.toolbar}>
             <span>
-              Workspace <ChevronRight size={12} />{" "}
+              <span className={styles.breadcrumbRoot}>
+                Workspace <ChevronRight size={12} />
+              </span>
               <span>
                 {view === "overview" ? "My learning" : "Lesson preview"}
               </span>
             </span>
-            <Badge variant="muted" className="py-1 text-[10px]">
+            <Badge variant="muted" className="py-1 text-xs">
               Sample content
             </Badge>
           </div>
           <div className={styles.content}>
             <div className={styles.pageHeading}>
               <div>
-                <p className={styles.kicker}>YOUR NEXT CHAPTER</p>
-                <h3>
+                <h2>
                   {view === "overview"
                     ? "A little progress, every day."
                     : "One lesson at a time."}
-                </h3>
+                </h2>
                 <p>A space to stay curious and keep moving forward.</p>
               </div>
               <div className={styles.avatar} aria-hidden="true">
@@ -165,8 +166,8 @@ export function LearningDemo() {
                     </span>
                   </div>
                   <div className={styles.featureContent}>
-                    <p className={styles.kicker}>A TASTE OF THE EXPERIENCE</p>
-                    <h4>The art of focused learning</h4>
+                    <p className={styles.kicker}>Sample course</p>
+                    <h3>The art of focused learning</h3>
                     <p>Make space for ideas that move you forward.</p>
                     <LearningProgress
                       value={percentage}
@@ -192,9 +193,9 @@ export function LearningDemo() {
                 </div>
                 <div className={styles.overviewBottom}>
                   <div className={styles.lessonList}>
-                    <h4>
-                      Your next steps <span>03 LESSONS</span>
-                    </h4>
+                    <h3>
+                      Your next steps <span>3 lessons</span>
+                    </h3>
                     {lessons.map((item, index) => (
                       <button
                         key={item.title}
@@ -220,7 +221,7 @@ export function LearningDemo() {
                       {completed.length}
                       <small>/ 3</small>
                     </span>
-                    <h4>Every step counts.</h4>
+                    <h3>Every step counts.</h3>
                     <p>
                       {completed.length === 3
                         ? "You finished the demo. Keep that curiosity going."
@@ -232,16 +233,16 @@ export function LearningDemo() {
             ) : (
               <div className={styles.lessonView}>
                 <article className={styles.readingCard} aria-live="polite">
-                  <Badge className="text-[10px]">
+                  <Badge className="text-xs">
                     Lesson {selected + 1} of 3 · {lesson.duration}
                   </Badge>
-                  <h4>{lesson.title}</h4>
+                  <h3>{lesson.title}</h3>
                   <p className={styles.subtitle}>{lesson.subtitle}</p>
                   <p>{lesson.body}</p>
                   <div className={styles.exercise}>
                     <Sparkles size={17} />
                     <div>
-                      <h5>A small step to try</h5>
+                      <h4>A small step to try</h4>
                       <p>{lesson.exercise}</p>
                     </div>
                   </div>
@@ -259,7 +260,7 @@ export function LearningDemo() {
                   </Button>
                 </article>
                 <div className={styles.lessonList}>
-                  <h4>In this demo</h4>
+                  <h3>In this demo</h3>
                   {lessons.map((item, index) => (
                     <button
                       key={item.title}

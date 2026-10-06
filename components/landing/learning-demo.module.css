@@ -32,7 +32,7 @@
   padding: 0 17px;
   border-bottom: 1px solid var(--border);
   background: var(--surface-raised);
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted-foreground);
 }
 .windowDots {
@@ -50,8 +50,7 @@
 .demoLabel {
   width: 100px;
   text-align: right;
-  font-size: 9px;
-  letter-spacing: 0.02em;
+  font-size: 12px;
 }
 .workspace {
   display: grid;
@@ -72,8 +71,7 @@
 }
 .sidebarLabel {
   color: var(--muted-foreground);
-  font-size: 9px;
-  letter-spacing: 0.12em;
+  font-size: 12px;
   padding: 0 12px;
   margin-bottom: 12px;
 }
@@ -85,7 +83,7 @@
   text-align: left;
   padding: 11px 12px;
   border-radius: 7px;
-  font-size: 11px;
+  font-size: 13px;
   margin-bottom: 3px;
   color: var(--muted-foreground);
 }
@@ -118,7 +116,7 @@
 }
 .sidebarBottom > span {
   display: block;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted-foreground);
   line-height: 1.7;
   margin-top: 6px;
@@ -133,7 +131,7 @@
   padding: 13px 25px;
   border-bottom: 1px solid var(--border);
   color: var(--muted-foreground);
-  font-size: 10px;
+  font-size: 12px;
 }
 .toolbar > span:first-child {
   display: flex;
@@ -142,6 +140,12 @@
 }
 .toolbar > span:first-child > span {
   color: var(--foreground);
+}
+.toolbar .breadcrumbRoot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted-foreground);
 }
 .content {
   padding: 26px;
@@ -153,18 +157,16 @@
 }
 .kicker {
   color: var(--primary);
-  font-size: 8px;
-  letter-spacing: 0.14em;
+  font-size: 12px;
   font-weight: 500;
 }
-.pageHeading h3 {
+.pageHeading h2 {
   font-size: 25px;
   letter-spacing: -0.04em;
   font-weight: 500;
-  margin-top: 7px;
 }
 .pageHeading > div > p:last-child {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--muted-foreground);
   margin-top: 6px;
 }
@@ -187,8 +189,9 @@
 }
 .tabs button {
   color: var(--muted-foreground);
-  font-size: 11px;
-  padding: 0 0 11px;
+  font-size: 13px;
+  min-height: 44px;
+  padding: 8px 0 11px;
   border-bottom: 2px solid transparent;
 }
 .tabs button[aria-pressed="true"] {
@@ -253,15 +256,19 @@
 .featureContent {
   padding: 22px 24px;
 }
-.featureContent h4 {
+.featureContent h3 {
   font-size: 19px;
   letter-spacing: -0.035em;
   margin-top: 8px;
 }
 .featureContent > p:not(.kicker) {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--muted-foreground);
   margin-top: 6px;
+}
+.featureContent > button,
+.readingCard > button {
+  min-height: 44px;
 }
 .overviewBottom {
   display: grid;
@@ -276,8 +283,8 @@
   border-radius: 12px;
   padding: 16px;
 }
-.lessonList h4 {
-  font-size: 12px;
+.lessonList h3 {
+  font-size: 14px;
   font-weight: 500;
   display: flex;
   justify-content: space-between;
@@ -285,10 +292,9 @@
   gap: 5px;
   margin-bottom: 10px;
 }
-.lessonList h4 > span {
-  font-size: 8px;
+.lessonList h3 > span {
+  font-size: 12px;
   color: var(--muted-foreground);
-  letter-spacing: 0.07em;
 }
 .lessonList button {
   display: flex;
@@ -298,7 +304,8 @@
   text-align: left;
   padding: 10px 6px;
   border-radius: 6px;
-  font-size: 10px;
+  font-size: 13px;
+  min-height: 44px;
 }
 .lessonList button:hover,
 .lessonList button[aria-current] {
@@ -312,7 +319,7 @@
 }
 .lessonList small {
   display: block;
-  font-size: 9px;
+  font-size: 12px;
   color: var(--muted-foreground);
   margin-top: 3px;
 }
@@ -325,7 +332,7 @@
   background: var(--secondary);
   color: var(--primary);
   border-radius: 6px;
-  font-size: 9px;
+  font-size: 12px;
 }
 .progressCard {
   text-align: center;
@@ -356,12 +363,12 @@
   color: var(--muted-foreground);
   margin-left: 3px;
 }
-.progressCard h4 {
-  font-size: 12px;
+.progressCard h3 {
+  font-size: 14px;
   margin-top: 12px;
 }
 .progressCard p {
-  font-size: 10px;
+  font-size: 13px;
   color: var(--muted-foreground);
   line-height: 1.6;
   max-width: 160px;
@@ -374,7 +381,7 @@
   gap: 12px;
   padding: 11px 25px;
   border-top: 1px solid var(--border);
-  font-size: 9px;
+  font-size: 12px;
   color: var(--muted-foreground);
 }
 .statusBar > span {
@@ -393,6 +400,9 @@
   display: flex;
   align-items: center;
   gap: 5px;
+  min-height: 44px;
+  min-width: 44px;
+  flex-shrink: 0;
 }
 .lessonView {
   display: grid;
@@ -407,14 +417,14 @@
   padding: 24px;
   background: var(--surface-raised);
 }
-.readingCard h4 {
+.readingCard h3 {
   font-size: 24px;
   line-height: 1.25;
   letter-spacing: -0.04em;
   margin: 20px 0 12px;
 }
 .readingCard > p {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.8;
   color: var(--muted-foreground);
   margin-bottom: 16px;
@@ -434,13 +444,13 @@
   color: var(--primary);
   flex-shrink: 0;
 }
-.exercise h5 {
-  font-size: 11px;
+.exercise h4 {
+  font-size: 13px;
   color: var(--primary);
   margin-bottom: 6px;
 }
 .exercise p {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--muted-foreground);
   line-height: 1.7;
 }
@@ -460,7 +470,7 @@
   .featureContent {
     padding: 20px;
   }
-  .pageHeading h3 {
+  .pageHeading h2 {
     font-size: 22px;
   }
 }
@@ -472,14 +482,23 @@
   }
   .windowBar {
     padding-inline: 12px;
-    font-size: 8px;
+    font-size: 11px;
   }
   .windowDots {
     width: 28px;
   }
   .demoLabel {
     width: auto;
-    font-size: 8px;
+    font-size: 11px;
+  }
+  .windowBar > span:not(.demoLabel) {
+    display: none;
+  }
+  .toolbar > span:first-child {
+    gap: 6px;
+  }
+  .toolbar .breadcrumbRoot {
+    display: none;
   }
   .workspace {
     display: block;
@@ -493,12 +512,12 @@
   .content {
     padding: 18px 16px;
   }
-  .pageHeading h3 {
+  .pageHeading h2 {
     font-size: 20px;
   }
   .pageHeading > div > p:last-child {
-    max-width: 215px;
-    font-size: 10px;
+    max-width: 28ch;
+    font-size: 13px;
     line-height: 1.6;
   }
   .avatar {
@@ -543,7 +562,7 @@
   }
   .statusBar {
     padding: 12px 16px;
-    font-size: 8px;
+    font-size: 12px;
   }
   .statusBar > span {
     max-width: 240px;
