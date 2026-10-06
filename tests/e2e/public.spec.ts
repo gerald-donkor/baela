@@ -115,6 +115,90 @@ test("mobile navigation opens and closes after choosing a destination", async ({
   ).toHaveCount(0);
 });
 
+test("review stories and FAQ answers are usable by keyboard", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const reviews = page.getByRole("region", {
+    name: "Different paths. Same spark.",
+  });
+  await expect(
+    reviews.getByText("Sample reviews · fictional profiles", { exact: true }),
+  ).toBeVisible();
+  const featured = reviews.getByRole("figure", {
+    name: "Featured sample review",
+  });
+  await expect(featured.getByText("Maya Chen", { exact: true })).toBeVisible();
+  const next = reviews.getByRole("button", { name: "Next sample review" });
+  await next.focus();
+  await page.keyboard.press("Enter");
+  await expect(
+    featured.getByText("Amara Okafor", { exact: true }),
+  ).toBeVisible();
+  await page.keyboard.press("Enter");
+  await expect(featured.getByText("Nina Patel", { exact: true })).toBeVisible();
+  await page.keyboard.press("Enter");
+  await expect(featured.getByText("Maya Chen", { exact: true })).toBeVisible();
+  await reviews.getByRole("button", { name: "Previous sample review" }).click();
+  await expect(featured.getByText("Nina Patel", { exact: true })).toBeVisible();
+  await reviews
+    .getByRole("button", { name: "Read Maya Chen’s sample review" })
+    .click();
+  await expect(featured.getByText("Maya Chen", { exact: true })).toBeVisible();
+  const faq = page.getByRole("region", {
+    name: "A little clarity, before you begin.",
+  });
+  const question = faq
+    .locator("summary")
+    .filter({ hasText: "Can I try the learning experience first?" });
+  await question.focus();
+  await page.keyboard.press("Enter");
+  await expect(
+    faq.getByRole("link", { name: "interactive demo", exact: true }),
+  ).toBeVisible();
+  await page.keyboard.press("Enter");
+  await expect(
+    faq.getByRole("link", { name: "interactive demo", exact: true }),
+  ).toBeHidden();
+});
+
+test("buttons and expandable controls show a pointer without enabling closed enrollment", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const actions = [
+    page.getByRole("link", { name: "Explore courses", exact: true }),
+    page.getByRole("button", { name: "Explore a lesson", exact: true }),
+    page.getByRole("button", { name: "Next sample review", exact: true }),
+    page.getByRole("button", { name: "Enrollment opens soon" }).first(),
+    page.locator("summary").first(),
+  ];
+  for (const action of actions) {
+    await action.hover();
+    expect(
+      await action.evaluate((element) => {
+        const box = element.getBoundingClientRect();
+        const hovered = document.elementFromPoint(
+          box.x + box.width / 2,
+          box.y + box.height / 2,
+        );
+        return hovered ? getComputedStyle(hovered).cursor : null;
+      }),
+    ).toBe("pointer");
+  }
+  const enroll = page
+    .getByRole("button", { name: "Enrollment opens soon" })
+    .first();
+  await expect(enroll).toBeDisabled();
+  const checkoutRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/api/checkout"))
+      checkoutRequests.push(request.url());
+  });
+  await enroll.evaluate((element: HTMLButtonElement) => element.click());
+  expect(checkoutRequests).toEqual([]);
+});
+
 test("the design system gallery shares theme tokens and accessible progress", async ({
   page,
 }) => {
