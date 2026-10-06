@@ -10,6 +10,7 @@ import { CourseCard } from "@/components/course-card";
 import { TestimonialCard } from "@/components/ui/testimonial-card";
 import { Faq } from "@/components/ui/faq";
 import { sampleReviews } from "@/components/landing/reviews-data";
+import { SiteHeaderContent } from "@/components/site-header-content";
 
 export const metadata = {
   title: "Design system",
@@ -190,6 +191,33 @@ export default function DesignSystem() {
             },
           ]}
         />
+      </section>
+      <section aria-labelledby="navigation-title">
+        <SectionHeading
+          id="navigation-title"
+          className="max-w-2xl"
+          eyebrow="Navigation"
+          title="Room for every account."
+          description="The same header adapts to visitors, students, and administrators. These are presentation examples; account permissions come from the signed-in session."
+        />
+        <div className="space-y-6">
+          {[
+            { label: "Visitor navigation", signedIn: false, admin: false },
+            { label: "Student navigation", signedIn: true, admin: false },
+            { label: "Admin navigation", signedIn: true, admin: true },
+          ].map(({ label, signedIn, admin }) => (
+            <div key={label}>
+              <h3 className="mb-3 text-sm text-muted-foreground">{label}</h3>
+              <div
+                role="group"
+                aria-label={label}
+                className="relative isolate -mx-4 rounded-card border bg-card focus-within:z-10 sm:-mx-6"
+              >
+                <SiteHeaderContent signedIn={signedIn} admin={admin} />
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
     </div>
   );
