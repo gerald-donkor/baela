@@ -8,9 +8,9 @@ Continue the user's frontend quality review. Their last implementation request w
 
 > Use the '/home/dgk/Projects/next/baela/.agents/skills/frontend-design' and make sure everything is properly built.
 
-That turn was intentionally interrupted after reading the skill and inspecting source files. No implementation changes, new visual review, or new validation were completed during that interrupted turn. The user then explicitly requested this handoff file at the repository root.
+That turn was intentionally interrupted after reading the skill and inspecting source files. No implementation changes, new visual review, or new validation were completed during that interrupted turn. The user then requested a handoff at the repository root and clarified that it should be a Markdown file inside the `handoff-session/` folder.
 
-The handoff skill was read from `.agents/skills/handoff/SKILL.md`. Its normal temporary-directory destination is superseded by the user's explicit root-file instruction. This file is Markdown despite having no extension.
+The handoff skill was read from `.agents/skills/handoff/SKILL.md`. Its normal temporary-directory destination is superseded by the user's explicit instruction to save a Markdown handoff in `handoff-session/` at the repository root. The entry point is `handoff-session/README.md`.
 
 ## Start here
 
@@ -97,4 +97,4 @@ No subagents were used. Do not delegate unless the user or applicable instructio
 
 ## Suggested fresh-session prompt
 
-Continue the frontend quality review in this repository. Read `handoff-session`, `AGENTS.md`, `.agents/skills/frontend-design/SKILL.md`, and `docs/design-system.md` first. Preserve the accepted Horizon direction, inspect current rendered pages, fix confirmed design/accessibility/responsive issues, and verify the final build and browser interactions. Keep sample reviews explicitly fictional and existing course/payment behavior intact.
+Continue the frontend quality review in this repository. Read `handoff-session/README.md`, `AGENTS.md`, `.agents/skills/frontend-design/SKILL.md`, and `docs/design-system.md` first. Preserve the accepted Horizon direction, inspect current rendered pages, fix confirmed design/accessibility/responsive issues, and verify the final build and browser interactions. Keep sample reviews explicitly fictional and existing course/payment behavior intact.
