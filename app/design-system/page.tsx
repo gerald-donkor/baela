@@ -7,6 +7,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { LearningProgress } from "@/components/ui/learning-progress";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { CourseCard } from "@/components/course-card";
+import { TestimonialCard } from "@/components/ui/testimonial-card";
+import { Faq } from "@/components/ui/faq";
+import { sampleReviews } from "@/components/landing/reviews-data";
 
 export const metadata = {
   title: "Design system",
@@ -160,6 +163,33 @@ export default function DesignSystem() {
             </CardContent>
           </Card>
         </div>
+      </section>
+      <section aria-labelledby="stories-title">
+        <SectionHeading
+          id="stories-title"
+          eyebrow="05 / Stories and questions"
+          title="Make room for another perspective."
+          description="Reusable review cards and native, keyboard-accessible FAQ disclosure. These reviews use fictional sample profiles."
+        />
+        <div className="grid gap-5 md:grid-cols-2">
+          <TestimonialCard review={sampleReviews[1]} />
+          <TestimonialCard review={sampleReviews[3]} />
+        </div>
+        <Faq
+          className="mt-8"
+          items={[
+            {
+              question: "Where do these review styles come from?",
+              answer:
+                "The column layout takes inspiration from 21st.dev testimonial components, adapted to Baela’s Horizon tokens. All review text and names here are fictional placeholders.",
+            },
+            {
+              question: "How should these components be reused?",
+              answer:
+                "Use TestimonialCard for a named, attributed quote and Faq for a list of questions and answers. Both inherit the active theme. Replace sample profiles with approved reviews before using them as real testimonials.",
+            },
+          ]}
+        />
       </section>
     </div>
   );

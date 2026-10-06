@@ -1,0 +1,329 @@
+.section {
+  position: relative;
+  isolation: isolate;
+  padding: 100px 0 50px;
+  overflow: hidden;
+}
+.section::before {
+  content: "";
+  position: absolute;
+  inset: 80px 0 auto;
+  height: 550px;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 24% 40%,
+    color-mix(in srgb, var(--primary) 7%, transparent),
+    transparent 60%
+  );
+}
+.heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 36px;
+  margin-bottom: 46px;
+}
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary);
+  font-size: 12px;
+}
+.heading h2 {
+  font-size: clamp(38px, 4vw, 54px);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 1.12;
+  margin-top: 18px;
+}
+.intro {
+  max-width: 400px;
+  padding-bottom: 4px;
+}
+.intro > p {
+  font-size: 13px;
+  line-height: 1.85;
+  color: var(--muted-foreground);
+  margin-top: 14px;
+}
+.avatarStack {
+  display: flex;
+  align-items: center;
+  padding-left: 6px;
+}
+.avatarStack img,
+.avatarStack > span {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--background);
+  border-radius: 50%;
+  margin-left: -6px;
+  object-fit: cover;
+  background: var(--secondary);
+}
+.avatarStack > span {
+  display: grid;
+  place-items: center;
+  color: var(--primary);
+  font-size: 17px;
+}
+.sampleLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  font-size: 10px;
+  color: var(--muted-foreground);
+}
+.sampleLabel > span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--muted-foreground);
+}
+.columns {
+  display: grid;
+  grid-template-columns: 1.12fr 1fr 1fr;
+  align-items: start;
+  gap: 18px;
+}
+.column {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+.column:nth-child(2) {
+  padding-top: 28px;
+}
+.column:nth-child(3) {
+  padding-top: 58px;
+}
+.featured {
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--primary) 40%, var(--border));
+  border-radius: var(--card-radius);
+  padding: 30px;
+  background:
+    radial-gradient(
+      ellipse at 0 0,
+      color-mix(in srgb, var(--primary) 14%, transparent),
+      transparent 70%
+    ),
+    var(--card);
+  box-shadow:
+    0 0 55px color-mix(in srgb, var(--glow) 8%, transparent),
+    inset 0 1px 0 #ffffff08;
+  overflow: hidden;
+}
+.featured::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  height: 1px;
+  left: 12%;
+  right: 12%;
+  top: 0;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+}
+.featuredTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--primary);
+}
+.featuredTop > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+}
+.featuredTop > span > span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 10px var(--glow);
+}
+.featuredStory {
+  min-height: 380px;
+  margin-top: 36px;
+  animation: change-story 0.25s ease-out;
+}
+.highlight {
+  margin-top: 19px;
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.045em;
+  max-width: 280px;
+}
+.featuredStory blockquote {
+  font-size: 14px;
+  line-height: 1.85;
+  color: var(--muted-foreground);
+  margin-top: 22px;
+}
+.featuredStory figcaption {
+  margin-top: 29px;
+}
+.controls {
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.dots,
+.arrows {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.dots {
+  gap: 0;
+}
+.dots button {
+  width: 24px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+}
+.dots button span {
+  height: 5px;
+  width: 5px;
+  border-radius: 50%;
+  background: var(--muted-foreground);
+  opacity: 0.4;
+  transition:
+    width 0.2s,
+    opacity 0.2s;
+}
+.dots button[aria-pressed="true"] span {
+  width: 15px;
+  opacity: 1;
+  background: var(--primary);
+}
+.arrows button {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+}
+.footnote {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding-top: 50px;
+  color: var(--muted-foreground);
+  font-size: 11px;
+  text-align: center;
+}
+.line {
+  height: 1px;
+  width: 80px;
+  background: linear-gradient(90deg, transparent, var(--border));
+}
+.line:last-child {
+  transform: rotate(180deg);
+}
+@keyframes change-story {
+  from {
+    opacity: 0.6;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 900px) {
+  .columns {
+    grid-template-columns: 1fr 1fr;
+  }
+  .column:nth-child(3) {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding-top: 0;
+    align-items: start;
+  }
+  .column:nth-child(3) > figure {
+    padding: 22px;
+  }
+  .featuredStory {
+    min-height: 370px;
+  }
+}
+@media (max-width: 640px) {
+  .section {
+    padding-top: 70px;
+  }
+  .heading {
+    display: grid;
+    gap: 25px;
+    margin-bottom: 30px;
+  }
+  .heading h2 {
+    font-size: 42px;
+  }
+  .intro {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 12px 16px;
+  }
+  .intro > p {
+    margin-top: 0;
+    font-size: 11px;
+    max-width: 190px;
+  }
+  .avatarStack img,
+  .avatarStack > span {
+    width: 29px;
+    height: 29px;
+    border-width: 2px;
+    margin-left: -9px;
+  }
+  .sampleLabel {
+    grid-column: 1 / -1;
+    margin-top: 0;
+  }
+  .columns {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .column {
+    gap: 16px;
+  }
+  .column:nth-child(2),
+  .column:nth-child(3) {
+    padding-top: 0;
+    grid-template-columns: 1fr;
+    grid-column: auto;
+  }
+  .column:nth-child(3) > figure {
+    padding: 24px;
+  }
+  .featured {
+    padding: 26px;
+  }
+  .featuredStory {
+    min-height: 365px;
+    margin-top: 30px;
+  }
+  .highlight {
+    font-size: 32px;
+  }
+  .footnote {
+    gap: 12px;
+    padding-top: 32px;
+    font-size: 10px;
+  }
+  .line {
+    width: 25px;
+    flex-shrink: 0;
+  }
+}

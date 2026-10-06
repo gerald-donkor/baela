@@ -23,6 +23,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { LearningDemo } from "@/components/landing/learning-demo";
+import { DeveloperReviews } from "@/components/landing/developer-reviews";
+import { LearningFaq } from "@/components/landing/learning-faq";
 import styles from "./page.module.css";
 export default async function Home() {
   const [items, plans, user] = await Promise.all([
@@ -185,6 +187,7 @@ export default async function Home() {
           </div>
         )}
       </section>
+      <DeveloperReviews />
       <section id="pricing" className="shell pt-16 pb-10 sm:pt-24">
         <SectionHeading
           eyebrow="Room for every kind of learner"
@@ -284,6 +287,7 @@ export default async function Home() {
           Prices in USD. Any applicable taxes are calculated at checkout.
         </p>
       </section>
+      <LearningFaq />
       <section className="shell pt-20 sm:pt-28">
         <div className={styles.closingCta}>
           <Sparkles

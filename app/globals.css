@@ -51,8 +51,18 @@ html {
   background: var(--primary);
   color: var(--primary-foreground);
 }
-button:not(:disabled),
-summary {
+:is(
+  button,
+  [role="button"],
+  a[href],
+  summary,
+  select,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  input[type="checkbox"],
+  input[type="radio"]
+) {
   cursor: pointer;
 }
 input,
