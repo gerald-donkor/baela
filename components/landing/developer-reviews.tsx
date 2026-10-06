@@ -78,51 +78,49 @@ export function DeveloperReviews() {
                 </span>
                 <Quote size={25} strokeWidth={1.25} aria-hidden="true" />
               </div>
-              <div
-                key={featured.name}
-                className={styles.featuredStory}
-                aria-live="polite"
-                aria-atomic="true"
-              >
+              <div key={featured.name} className={styles.featuredStory}>
                 <ReviewStars />
                 <p className={styles.highlight}>{featured.highlight}</p>
                 <blockquote>“{featured.quote}”</blockquote>
-                <figcaption>
-                  <ReviewAuthor review={featured} />
-                </figcaption>
               </div>
-              <div className={styles.controls}>
-                <div className={styles.dots}>
-                  {featuredReviews.map((review, index) => (
-                    <button
-                      key={review.name}
-                      aria-label={`Read ${review.name}’s sample review`}
-                      aria-pressed={active === index}
-                      onClick={() => setActive(index)}
+              <p className="sr-only" role="status" aria-atomic="true">
+                {featured.name}: {featured.quote}
+              </p>
+              <figcaption className={styles.featuredAuthor}>
+                <ReviewAuthor review={featured} />
+                <div className={styles.controls}>
+                  <div className={styles.dots}>
+                    {featuredReviews.map((review, index) => (
+                      <button
+                        key={review.name}
+                        aria-label={`Read ${review.name}’s sample review`}
+                        aria-pressed={active === index}
+                        onClick={() => setActive(index)}
+                      >
+                        <span />
+                      </button>
+                    ))}
+                  </div>
+                  <div className={styles.arrows}>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      aria-label="Previous sample review"
+                      onClick={() => move(-1)}
                     >
-                      <span />
-                    </button>
-                  ))}
+                      <ArrowLeft size={15} />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      aria-label="Next sample review"
+                      onClick={() => move(1)}
+                    >
+                      <ArrowRight size={15} />
+                    </Button>
+                  </div>
                 </div>
-                <div className={styles.arrows}>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    aria-label="Previous sample review"
-                    onClick={() => move(-1)}
-                  >
-                    <ArrowLeft size={15} />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    aria-label="Next sample review"
-                    onClick={() => move(1)}
-                  >
-                    <ArrowRight size={15} />
-                  </Button>
-                </div>
-              </div>
+              </figcaption>
             </figure>
             <TestimonialCard review={sampleReviews[3]} />
           </div>
