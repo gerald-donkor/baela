@@ -9,7 +9,6 @@ export type Testimonial = {
   image: string;
   quote: string;
   subject: string;
-  highlight: string;
 };
 
 export function ReviewStars({ className }: { className?: string }) {
