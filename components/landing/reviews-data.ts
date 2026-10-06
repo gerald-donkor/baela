@@ -1,8 +1,10 @@
 import type { Testimonial } from "@/components/ui/testimonial-card";
 
+type FeaturedTestimonial = Testimonial & { highlight: string };
+
 // Illustrative copy and fictional identities for the landing-page design.
 // Replace with permissioned student reviews before presenting these as endorsements.
-export const sampleReviews: Testimonial[] = [
+export const sampleReviews: FeaturedTestimonial[] = [
   {
     name: "Maya Chen",
     role: "Frontend developer",

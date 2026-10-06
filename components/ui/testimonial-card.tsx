@@ -9,13 +9,13 @@ export type Testimonial = {
   image: string;
   quote: string;
   subject: string;
-  highlight: string;
 };
 
 export function ReviewStars({ className }: { className?: string }) {
   return (
     <span
       className={cn(styles.stars, className)}
+      role="img"
       aria-label="Sample five-star rating"
     >
       {Array.from({ length: 5 }, (_, index) => (
