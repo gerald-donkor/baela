@@ -8,19 +8,20 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "border border-primary/50 bg-linear-to-b from-primary/80 to-primary text-primary-foreground shadow-[0_2px_12px_#658ce820,inset_0_1px_0_#ffffff45] hover:not-disabled:shadow-[0_2px_22px_#658ce840]",
+          "border border-primary/50 bg-primary text-primary-foreground shadow-[0_2px_12px_#658ce820,inset_0_1px_0_#ffffff45] hover:not-disabled:shadow-[0_2px_22px_#658ce840]",
         secondary:
           "bg-secondary text-secondary-foreground hover:not-disabled:bg-secondary/80",
         outline:
           "border border-border bg-card/40 hover:not-disabled:border-primary/40 hover:not-disabled:bg-secondary",
         ghost: "hover:not-disabled:bg-secondary",
-        destructive: "bg-destructive text-white hover:not-disabled:bg-destructive/90",
+        destructive:
+          "bg-destructive text-white hover:not-disabled:bg-destructive/90",
       },
       size: {
         default: "h-11 px-6",
         sm: "h-9 px-4",
         lg: "h-12 px-6 text-sm",
-        icon: "size-10",
+        icon: "size-11",
       },
     },
     defaultVariants: { variant: "default", size: "default" },
