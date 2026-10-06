@@ -3,7 +3,7 @@ import { Slot } from "radix-ui";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-control text-sm font-medium transition-[background-color,border-color,box-shadow] disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary",
+  "inline-flex cursor-pointer items-center justify-center gap-2 rounded-control text-sm font-medium transition-[background-color,border-color,box-shadow] disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary",
   {
     variants: {
       variant: {
