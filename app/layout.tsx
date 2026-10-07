@@ -6,6 +6,9 @@ import { SiteFooter } from "@/components/site-footer";
 import { site } from "@/lib/config";
 import "./globals.css";
 
+// The shared header reads the current user's session on every page.
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {

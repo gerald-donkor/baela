@@ -49,7 +49,8 @@ New visitors see dark mode. The header toggle allows light mode; `next-themes` p
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `Brand`                   | Shared star mark and Baela wordmark. Wrap in a home link with `aria-label="Baela home"`.                                                                                                                         |
 | `Button`                  | `variant`: default, secondary, outline, ghost, destructive. `size`: default, sm, lg, icon. Use `asChild` for links. Icon controls have a 44px target; primary actions use the semantic fill and inset highlight. |
-| `SiteHeaderContent`       | Shared header presentation with `signedIn` and `admin` props. `SiteHeader` supplies the real session; the gallery renders all three account variants for responsive inspection.                                  |
+| `SiteHeaderContent`       | Shared header presentation with `user` (name/email or null) and `admin` props. `SiteHeader` supplies the real session; the gallery renders all three account variants for responsive inspection.                 |
+| `AccountMenu`             | Signed-in initial avatar, account name/email link, and sign-out action. Uses Radix DropdownMenu for keyboard navigation, Escape, outside dismissal, and viewport collision handling.                             |
 | `Card` / `CardContent`    | Theme-aware surface and fine outline. `CardContent` provides 24px padding.                                                                                                                                       |
 | `Badge`                   | `variant`: default, muted, success. A compact status pill; use explicit readable text.                                                                                                                           |
 | `SectionHeading`          | Required `eyebrow` and `title`; optional `description`, `centered`, `className`, `id`.                                                                                                                           |
@@ -89,6 +90,8 @@ import { SectionHeading } from "@/components/ui/section-heading";
 Course catalogs use 1/2/3 columns at mobile/tablet/desktop, with 20–24px gaps. Place readable course metadata below the art. Sales pages can use a wide content column and narrower enrollment card; lesson pages retain the wide reading/player area and a 290px desktop curriculum. Collapse sidebars into the existing accessible dialog on mobile.
 
 Use restrained surfaces in learning screens. Reserve the large horizon, broad glows, and centered hero for marketing and occasional onboarding. Keep the lesson player and long-form reading content visually calm. Avoid glows on every panel.
+
+Authentication uses a two-column composition: an illuminated globe with the landing hero’s geography, atmospheric lighting, and connection trails, beside a quiet account form. `components/auth/auth.module.css` scopes the layout; the shared form retains the existing authentication requests, provider buttons, redirects, and recovery flows. The password visibility button has a labeled 44px target. Mobile collapses to the form, and reduced-motion or unavailable-WebGL sessions use the locally generated `public/images/auth/globe.svg` still. Three.js is loaded only when the visual is visible and motion is allowed.
 
 ## Interaction and accessibility
 

@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth/server";
+import { auth } from "@/lib/auth/instance";
 type Context = { params: Promise<{ path: string[] }> };
 export async function GET(request: Request, context: Context) {
   return auth().handler().GET(request, context);

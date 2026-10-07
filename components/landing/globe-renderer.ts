@@ -17,8 +17,6 @@ import {
 import { createGlobeEffects } from "./globe-effects";
 import { globeProjection } from "./globe-projection";
 
-export type GlobeStatus = "playing" | "paused" | "static";
-
 const surfaceVertex = `
   varying vec3 facing;
   varying vec3 localNormal;
@@ -80,10 +78,7 @@ const dotsFragment = `
   }
 `;
 
-export function createGlobeRenderer(
-  canvas: HTMLCanvasElement,
-  onStatus: (status: GlobeStatus) => void,
-) {
+export function createGlobeRenderer(canvas: HTMLCanvasElement) {
   const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const abort = new AbortController();
   const animation = { elapsed: 0 };
@@ -106,7 +101,6 @@ export function createGlobeRenderer(
   const materials: ShaderMaterial[] = [];
   let ready = false;
   let disposed = false;
-  let paused = false;
   let inView = false;
 
   const render = () => {
@@ -129,11 +123,7 @@ export function createGlobeRenderer(
     tween?.pause();
     if (!ready || disposed) return;
     render();
-    if (motion.matches) onStatus("static");
-    else {
-      onStatus(paused ? "paused" : "playing");
-      if (!paused && inView && !document.hidden) tween?.resume();
-    }
+    if (!motion.matches && inView && !document.hidden) tween?.resume();
   };
   const resize = () => {
     if (!renderer || disposed) return;
@@ -165,7 +155,6 @@ export function createGlobeRenderer(
     ready = false;
     tween?.pause();
     canvas.dataset.ready = "false";
-    onStatus("static");
   };
   canvas.addEventListener("webglcontextlost", contextLost);
 
@@ -193,7 +182,6 @@ export function createGlobeRenderer(
         powerPreference: "low-power",
       });
       if (!context) {
-        onStatus("static");
         return;
       }
       renderer = new WebGLRenderer({
@@ -259,15 +247,10 @@ export function createGlobeRenderer(
       if (disposed) return;
       ready = false;
       canvas.dataset.ready = "false";
-      onStatus("static");
     }
   };
   void initialize();
   return {
-    toggle() {
-      paused = !paused;
-      sync();
-    },
     dispose() {
       disposed = true;
       abort.abort();

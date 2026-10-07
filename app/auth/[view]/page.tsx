@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 import { AuthForm } from "@/components/auth-form";
+import { isAuthConfigured } from "@/lib/auth/instance";
+import { getAuthRedirect } from "@/lib/auth/redirect";
 export const metadata = {
   title: "Your account",
   robots: { index: false, follow: false },
@@ -9,7 +11,7 @@ export default async function AuthPage({
   searchParams,
 }: {
   params: Promise<{ view: string }>;
-  searchParams: Promise<{ next?: string; token?: string }>;
+  searchParams: Promise<{ next?: string; token?: string; error?: string }>;
 }) {
   const { view } = await params,
     query = await searchParams;
@@ -17,18 +19,13 @@ export default async function AuthPage({
     !["sign-in", "sign-up", "forgot-password", "reset-password"].includes(view)
   )
     notFound();
-  const next =
-    query.next?.startsWith("/") &&
-    !query.next.startsWith("//") &&
-    !query.next.includes("\\")
-      ? query.next
-      : "/dashboard";
   return (
     <AuthForm
       view={view}
-      next={next}
+      next={getAuthRedirect(query.next)}
       token={query.token}
-      enabled={!!process.env.NEON_AUTH_BASE_URL}
+      enabled={isAuthConfigured()}
+      oauthError={!!query.error}
     />
   );
 }

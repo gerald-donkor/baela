@@ -27,6 +27,18 @@ The [Horizon design system](docs/design-system.md) defines the shared visual lan
 
 Read [launch configuration](docs/launch.md) before taking payments and [operations](docs/operations.md) for incident recovery.
 
+## Neon authentication
+
+Set `NEON_AUTH_BASE_URL` from **Neon → Branch → Auth → Configuration** and generate `NEON_AUTH_COOKIE_SECRET` with `openssl rand -base64 32`. Keep both server-only and use the same Neon branch as `DATABASE_URL`. Google and GitHub credentials belong in the Neon dashboard; no provider client secrets are needed in this app.
+
+The custom forms at `/auth/sign-in` and `/auth/sign-up` use `authClient.signIn.social()` through `/api/auth/[...path]`. `proxy.ts` completes the OAuth session exchange on the return page and protects `/account`, `/admin`, and `/checkout/success`. The public catalog and demo dashboard stay accessible. Server-side identity and permission checks still protect account operations, admin actions, and paid course access.
+
+In each provider's console, register the callback URL shown by Neon: `{NEON_AUTH_BASE_URL}/callback/google` or `{NEON_AUTH_BASE_URL}/callback/github`. Add your deployed app origin under **Auth → Configuration → Domains**. Localhost ports are allowed automatically. See Neon's [OAuth guide](https://neon.com/docs/auth/guides/setup-oauth) and [trusted-domain guide](https://neon.com/docs/auth/guides/configure-domains).
+
+Run `npm run dev` and try each provider from `/auth/sign-in?next=/account`. A successful sign-in should return to the account page, show the signed-in navigation, and persist after a refresh. Test sign-out there as well. For Safari, run `npm run dev -- --experimental-https` and use `https://localhost:3000`.
+
+`npm run check` covers callback session exchange and safe redirects. Run the mocked provider UI checks with `BAELA_E2E_AUTH=1 npm run test:e2e -- tests/e2e/auth.spec.ts` after building. Real provider consent and email delivery require manual testing against your Neon branch.
+
 ## Commands
 
 ```sh

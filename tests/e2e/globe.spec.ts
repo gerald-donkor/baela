@@ -1,16 +1,16 @@
 import { expect, test } from "@playwright/test";
 
-test("hero globe rotates with a fixed frame, pauses, and keeps animating after ten seconds", async ({
+test("hero globe rotates with a fixed frame and keeps animating without a visible control", async ({
   page,
 }) => {
+  // The full animation cycle and software WebGL screenshots need extra time.
+  test.setTimeout(60000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
   const canvas = page.locator("canvas").first();
   await expect(canvas).toHaveAttribute("data-ready", "true");
-  await page
-    .getByRole("button", { name: "Pause animation", exact: true })
-    .click();
+  await expect(page.getByRole("button", { name: /animation$/ })).toHaveCount(0);
   const bounds = await canvas.boundingBox();
   expect(bounds).not.toBeNull();
   // Capture the exposed upper hemisphere, excluding the foreground content
@@ -21,36 +21,18 @@ test("hero globe rotates with a fixed frame, pauses, and keeps animating after t
     width: bounds!.width * 0.4,
     height: bounds!.height * 0.05,
   };
-  const still = await page.screenshot({ clip });
-  await page.waitForTimeout(350);
-  expect(Buffer.compare(await page.screenshot({ clip }), still)).toBe(0);
-
-  await page
-    .getByRole("button", { name: "Resume animation", exact: true })
-    .click();
+  const initial = await page.screenshot({ clip });
   await page.waitForTimeout(1000);
-  await page
-    .getByRole("button", { name: "Pause animation", exact: true })
-    .click();
   expect(await canvas.boundingBox()).toEqual(bounds);
-  expect(Buffer.compare(await page.screenshot({ clip }), still)).not.toBe(0);
-  await page
-    .getByRole("button", { name: "Resume animation", exact: true })
-    .click();
+  expect(Buffer.compare(await page.screenshot({ clip }), initial)).not.toBe(0);
   await page.waitForTimeout(10500);
-  await page
-    .getByRole("button", { name: "Pause animation", exact: true })
-    .click();
   const afterCycle = await page.screenshot({ clip });
-  expect(Buffer.compare(afterCycle, still)).not.toBe(0);
+  expect(Buffer.compare(afterCycle, initial)).not.toBe(0);
   await page.waitForTimeout(350);
-  expect(Buffer.compare(await page.screenshot({ clip }), afterCycle)).toBe(0);
-  await page
-    .getByRole("button", { name: "Resume animation", exact: true })
-    .click();
-  await expect(
-    page.getByRole("button", { name: "Pause animation", exact: true }),
-  ).toBeVisible();
+  expect(Buffer.compare(await page.screenshot({ clip }), afterCycle)).not.toBe(
+    0,
+  );
+  expect(await canvas.boundingBox()).toEqual(bounds);
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,

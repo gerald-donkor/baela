@@ -10,6 +10,7 @@ export default defineConfig({
     },
   },
   test: {
+    server: { deps: { inline: ["@neondatabase/auth"] } },
     include: ["tests/**/*.test.ts"],
     environment: "node",
     testTimeout: 20000,

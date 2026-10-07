@@ -1,23 +1,15 @@
 import "server-only";
-import { createNeonAuth } from "@neondatabase/auth/next/server";
 import { redirect, notFound } from "next/navigation";
 import { cache } from "react";
 import { eq } from "drizzle-orm";
 import { withDb } from "@/lib/db";
 import { users } from "@/lib/db/schema";
-import { required } from "@/lib/config";
 import { HttpError } from "@/lib/http";
-export function auth() {
-  return createNeonAuth({
-    baseUrl: required("NEON_AUTH_BASE_URL"),
-    cookies: {
-      secret: required("NEON_AUTH_COOKIE_SECRET"),
-      sessionDataTtl: 60,
-    },
-  });
-}
+import { auth, isAuthConfigured } from "./instance";
+export { auth } from "./instance";
+
 export const getViewer = cache(async () => {
-  if (!process.env.NEON_AUTH_BASE_URL || !process.env.DATABASE_URL) return null;
+  if (!isAuthConfigured() || !process.env.DATABASE_URL) return null;
   const { data: session } = await auth().getSession();
   if (!session?.user) return null;
   return withDb(async (db) => {

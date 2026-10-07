@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs/config";
 const config: NextConfig = {
+  // Keep the database driver's native WebSocket dependencies out of the bundle.
+  serverExternalPackages: ["@neondatabase/serverless", "ws"],
   async headers() {
     return [
       {

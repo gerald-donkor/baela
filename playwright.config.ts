@@ -21,7 +21,11 @@ export default defineConfig({
     env: {
       NEXT_PUBLIC_APP_URL: "http://localhost:3100",
       DATABASE_URL: "",
-      NEON_AUTH_BASE_URL: "",
+      NEON_AUTH_BASE_URL:
+        process.env.BAELA_E2E_AUTH === "1"
+          ? "https://auth.example.test/neondb/auth"
+          : "",
+      NEON_AUTH_COOKIE_SECRET: "test-cookie-secret-that-is-long-enough",
     },
     timeout: 60000,
   },

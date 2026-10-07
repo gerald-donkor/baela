@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { Brand } from "./ui/brand";
 import { SiteNavigation } from "./site-navigation";
+import type { AccountMenuUser } from "./account-menu";
 
 export function SiteHeaderContent({
-  signedIn,
+  user,
   admin,
 }: {
-  signedIn: boolean;
+  user: AccountMenuUser | null;
   admin: boolean;
 }) {
   return (
@@ -14,7 +15,7 @@ export function SiteHeaderContent({
       <Link href="/" aria-label="Baela home" className="shrink-0">
         <Brand />
       </Link>
-      <SiteNavigation signedIn={signedIn} admin={admin} />
+      <SiteNavigation user={user} admin={admin} />
     </div>
   );
 }

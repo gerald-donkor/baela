@@ -5,18 +5,21 @@ import { useEffect, useId, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import { Button } from "./ui/button";
+import { AccountMenu, type AccountMenuUser } from "./account-menu";
+import { cn } from "@/lib/utils";
 
 export function SiteNavigation({
-  signedIn,
+  user,
   admin,
 }: {
-  signedIn: boolean;
+  user: AccountMenuUser | null;
   admin: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const menuId = useId();
   const menuRef = useRef<HTMLElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
+  const signedIn = !!user;
 
   useEffect(() => {
     if (!open) return;
@@ -73,21 +76,34 @@ export function SiteNavigation({
       </nav>
       <div className="flex shrink-0 items-center gap-1 sm:gap-3">
         <ThemeToggle />
-        <Link
-          href={signedIn ? "/account" : "/auth/sign-in"}
-          className="nav-link hidden py-3 text-[13px] sm:block"
-        >
-          {signedIn ? "Account" : "Sign in"}
-        </Link>
+        {!signedIn && (
+          <Link
+            href="/auth/sign-in"
+            className="nav-link hidden py-3 text-[13px] sm:block"
+          >
+            Sign in
+          </Link>
+        )}
         <Button
           asChild
           size="sm"
-          className="hidden h-11 border-foreground/20 bg-foreground bg-none text-background shadow-none hover:bg-foreground/90 min-[360px]:inline-flex"
+          className={cn(
+            "hidden h-11 border-foreground/20 bg-foreground bg-none text-background shadow-none hover:bg-foreground/90",
+            signedIn ? "sm:inline-flex" : "min-[360px]:inline-flex",
+          )}
         >
-          <Link href={signedIn ? "/dashboard" : "/#courses"}>
+          <Link href={signedIn ? "/dashboard" : "/auth/sign-up"}>
             {signedIn ? "My learning" : "Get started"}
           </Link>
         </Button>
+        {user && (
+          <AccountMenu
+            user={user}
+            onOpenChange={(accountOpen) => {
+              if (accountOpen) setOpen(false);
+            }}
+          />
+        )}
         <Button
           variant="ghost"
           size="icon"
@@ -114,6 +130,9 @@ export function SiteNavigation({
               href: signedIn ? "/account" : "/auth/sign-in",
               label: signedIn ? "Account" : "Sign in",
             },
+            ...(!signedIn
+              ? [{ href: "/auth/sign-up", label: "Get started" }]
+              : []),
           ].map(({ href, label }) => (
             <Link
               key={href}

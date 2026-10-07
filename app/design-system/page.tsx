@@ -213,7 +213,14 @@ export default function DesignSystem() {
                 aria-label={label}
                 className="relative isolate -mx-4 rounded-card border bg-card focus-within:z-10 sm:-mx-6"
               >
-                <SiteHeaderContent signedIn={signedIn} admin={admin} />
+                <SiteHeaderContent
+                  user={
+                    signedIn
+                      ? { name: "Maya Chen", email: "maya@example.com" }
+                      : null
+                  }
+                  admin={admin}
+                />
               </div>
             </div>
           ))}

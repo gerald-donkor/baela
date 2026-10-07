@@ -113,7 +113,7 @@ test("mobile navigation dismisses with Escape, outside interaction, and a wider 
   await expect(menu).toHaveCount(0);
 
   await toggle.click();
-  await menu.getByRole("link", { name: "Sign in" }).focus();
+  await menu.getByRole("link").last().focus();
   await page.keyboard.press("Tab");
   await expect(menu).toHaveCount(0);
 
