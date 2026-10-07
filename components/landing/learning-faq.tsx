@@ -24,9 +24,10 @@ const questions: FaqItem[] = [
     question: "Can I try the learning experience first?",
     answer: (
       <>
-        Yes. The <Link href="#demo">interactive demo</Link> lets you explore
-        sample lessons and see how progress works without an account. Individual
-        courses may also offer preview lessons, marked in their curriculum.
+        Yes. The <Link href="#demo">workspace preview</Link> gives you a look
+        inside. You can also explore all six sample courses and their lessons
+        without an account. The sample progress shows how your learning space
+        will look.
       </>
     ),
   },

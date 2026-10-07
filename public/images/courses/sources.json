@@ -1,0 +1,61 @@
+{
+  "channel": "https://www.youtube.com/@codesistency/videos",
+  "retrievedAt": "2026-10-07",
+  "order": "Latest six videos, newest first",
+  "thumbnails": [
+    {
+      "videoId": "pZgw2WNOcHE",
+      "title": "How I Build & Sell $10k Platforms with Claude: FULL COURSE",
+      "videoUrl": "https://www.youtube.com/watch?v=pZgw2WNOcHE",
+      "sourceImage": "https://i.ytimg.com/vi/pZgw2WNOcHE/maxresdefault.jpg",
+      "src": "/images/courses/pZgw2WNOcHE.jpg",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "videoId": "FegYRu-swbA",
+      "title": "How to Build Real Mobile Apps with Codex - FULL COURSE 2026",
+      "videoUrl": "https://www.youtube.com/watch?v=FegYRu-swbA",
+      "sourceImage": "https://i.ytimg.com/vi/FegYRu-swbA/maxresdefault.jpg",
+      "src": "/images/courses/FegYRu-swbA.jpg",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "videoId": "OcqWu_kasck",
+      "title": "CLAUDE CODE BOOTCAMP: Build 3 Real Mobile Apps",
+      "videoUrl": "https://www.youtube.com/watch?v=OcqWu_kasck",
+      "sourceImage": "https://i.ytimg.com/vi/OcqWu_kasck/maxresdefault.jpg",
+      "src": "/images/courses/OcqWu_kasck.jpg",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "videoId": "pnTDHiCMobU",
+      "title": "How to build mobile apps for local businesses with Claude Code - FULL COURSE",
+      "videoUrl": "https://www.youtube.com/watch?v=pnTDHiCMobU",
+      "sourceImage": "https://i.ytimg.com/vi/pnTDHiCMobU/maxresdefault.jpg",
+      "src": "/images/courses/pnTDHiCMobU.jpg",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "videoId": "tpge9xJ0m5U",
+      "title": "How to Build Real Mobile Apps with Claude - FULL COURSE",
+      "videoUrl": "https://www.youtube.com/watch?v=tpge9xJ0m5U",
+      "sourceImage": "https://i.ytimg.com/vi/tpge9xJ0m5U/maxresdefault.jpg",
+      "src": "/images/courses/tpge9xJ0m5U.jpg",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "videoId": "p80OV6kjIO8",
+      "title": "The Ultimate Claude Code Tutorial for Mobile Apps - FULL COURSE",
+      "videoUrl": "https://www.youtube.com/watch?v=p80OV6kjIO8",
+      "sourceImage": "https://i.ytimg.com/vi/p80OV6kjIO8/maxresdefault.jpg",
+      "src": "/images/courses/p80OV6kjIO8.jpg",
+      "width": 1280,
+      "height": 720
+    }
+  ]
+}

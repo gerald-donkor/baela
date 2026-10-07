@@ -16,16 +16,34 @@ import { HttpError } from "@/lib/http";
 import { LessonPlayer, DownloadAttachment } from "@/components/lesson-player";
 import { Markdown } from "@/components/markdown";
 import { Button } from "@/components/ui/button";
-export const metadata = {
-  title: "Learn",
-  robots: { index: false, follow: false },
-};
+import { CourseWorkspace } from "@/components/courses/course-workspace";
+import { courseLessons, findSampleCourse } from "@/lib/sample-courses";
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ courseSlug: string; lessonId: string }>;
+}) {
+  const { courseSlug, lessonId } = await params;
+  const sample = findSampleCourse(courseSlug);
+  const lesson =
+    sample && courseLessons(sample).find((item) => item.id === lessonId);
+  return {
+    title: lesson ? `${lesson.title} — ${sample!.shortTitle}` : "Learn",
+    robots: { index: false, follow: false },
+  };
+}
 export default async function LearnPage({
   params,
 }: {
   params: Promise<{ courseSlug: string; lessonId: string }>;
 }) {
   const { courseSlug, lessonId } = await params;
+  const sample = findSampleCourse(courseSlug);
+  if (sample) {
+    const lesson = courseLessons(sample).find((item) => item.id === lessonId);
+    if (!lesson) notFound();
+    return <CourseWorkspace course={sample} lesson={lesson} />;
+  }
   if (!/^[0-9a-f-]{36}$/.test(lessonId)) notFound();
   const user = await getViewer();
   let data;

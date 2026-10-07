@@ -10,12 +10,16 @@ import { Button } from "@/components/ui/button";
 import { CheckoutButton } from "@/components/checkout-button";
 import { LessonPlayer } from "@/components/lesson-player";
 import { Markdown } from "@/components/markdown";
+import { CourseWorkspace } from "@/components/courses/course-workspace";
+import { findSampleCourse } from "@/lib/sample-courses";
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ courseSlug: string }>;
 }) {
   const { courseSlug } = await params;
+  const sample = findSampleCourse(courseSlug);
+  if (sample) return { title: sample.title, description: sample.summary };
   const detail = await courseDetail(courseSlug);
   return {
     title: detail?.course.title || "Course",
@@ -29,8 +33,10 @@ export default async function CoursePage({
 }: {
   params: Promise<{ courseSlug: string }>;
 }) {
-  const { courseSlug } = await params,
-    detail = await courseDetail(courseSlug);
+  const { courseSlug } = await params;
+  const sample = findSampleCourse(courseSlug);
+  if (sample) return <CourseWorkspace course={sample} />;
+  const detail = await courseDetail(courseSlug);
   if (!detail) notFound();
   const user = await getViewer();
   const grants = user ? await withDb((db) => grantsFor(db, user.id)) : [];

@@ -6,13 +6,14 @@ import { evaluateAccess } from "@/lib/domain/access";
 import { coursePercentage } from "@/lib/domain/progress";
 import { CourseCard } from "@/components/course-card";
 import { Button } from "@/components/ui/button";
+import { CourseLibrary } from "@/components/courses/course-library";
 export const metadata = {
   title: "My learning",
   robots: { index: false, follow: false },
 };
 export default async function Dashboard() {
   const user = await getViewer();
-  if (!user) redirect("/auth/sign-in?next=/dashboard");
+  if (!user) return <CourseLibrary dashboard />;
   if (user.state !== "active") redirect("/account");
   const { rows, grants } = await dashboard(user.id);
   const grouped = Map.groupBy(rows, (row) => row.course.id);

@@ -25,6 +25,8 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { LearningDemo } from "@/components/landing/learning-demo";
 import { DeveloperReviews } from "@/components/landing/developer-reviews";
 import { LearningFaq } from "@/components/landing/learning-faq";
+import { HeroGlobe } from "@/components/landing/hero-globe";
+import { SampleCourseGrid } from "@/components/courses/course-library";
 import styles from "./page.module.css";
 export default async function Home() {
   const [items, plans, user] = await Promise.all([
@@ -37,13 +39,7 @@ export default async function Home() {
   return (
     <>
       <section className={styles.hero} aria-labelledby="hero-title">
-        <div className={styles.atmosphere} aria-hidden="true">
-          <div className={styles.beams} />
-          <div className={styles.horizonClip}>
-            <div className={styles.horizon} />
-          </div>
-          <div className={styles.stars} />
-        </div>
+        <HeroGlobe />
         <div className={styles.heroContent}>
           <Badge className={styles.heroBadge}>
             <Sparkles className="size-3.5" /> A new horizon for learning{" "}
@@ -154,7 +150,7 @@ export default async function Home() {
             <BookOpen className="size-3" />{" "}
             {items.length
               ? `${items.length} ${items.length === 1 ? "course" : "courses"} to explore`
-              : "The first chapter is coming"}
+              : "6 courses to explore"}
           </Badge>
         </div>
         {items.length ? (
@@ -168,23 +164,7 @@ export default async function Home() {
             ))}
           </div>
         ) : (
-          <div className={styles.emptyCourses}>
-            <BookOpen className="size-7 mx-auto text-primary mb-5" />
-            <h3 className="text-xl font-medium">
-              Good things are taking shape.
-            </h3>
-            <p className="mt-2 text-muted-foreground">
-              The first courses will appear here when they’re ready.
-            </p>
-            <p className="mt-5 text-xs text-muted-foreground">
-              In the meantime, explore what learning here feels like.
-            </p>
-            <Button asChild variant="outline" size="sm" className="mt-5">
-              <Link href="#demo">
-                Explore the demo <ArrowRight className="size-3" />
-              </Link>
-            </Button>
-          </div>
+          <SampleCourseGrid />
         )}
       </section>
       <DeveloperReviews />

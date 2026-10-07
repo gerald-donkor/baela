@@ -3,87 +3,6 @@
   isolation: isolate;
   padding-top: 173px;
 }
-.atmosphere {
-  position: absolute;
-  inset: -88px 0 auto;
-  height: 870px;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-  mask-image: linear-gradient(#000 40%, transparent 95%);
-}
-.beams {
-  position: absolute;
-  width: 800px;
-  height: 350px;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  background:
-    repeating-linear-gradient(90deg, transparent 0 78px, #829dfb06 79px 80px),
-    radial-gradient(ellipse at 50% 95%, #688dff30, transparent 65%);
-  mask-image: linear-gradient(transparent, #000 50%, transparent);
-}
-.horizonClip {
-  position: absolute;
-  inset: 0 0 auto;
-  height: 480px;
-  mask-image: linear-gradient(#000 45%, transparent 95%);
-}
-.horizon {
-  position: absolute;
-  top: 170px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 960px;
-  height: 960px;
-  border-radius: 50%;
-  border-top: 2px solid #b5deff;
-  background: var(--background);
-  box-shadow:
-    0 -6px 14px -4px #abdfff,
-    0 -15px 35px -13px #6eacff,
-    0 -44px 95px -42px #477feb,
-    inset 0 9px 22px -16px #789ef8;
-}
-.horizon::before {
-  content: "";
-  position: absolute;
-  top: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 160px;
-  height: 6px;
-  border-radius: 50%;
-  background: #c9f5ff;
-  filter: blur(5px);
-}
-.atmosphere::after {
-  content: "";
-  position: absolute;
-  top: 520px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 780px;
-  height: 310px;
-  background: radial-gradient(ellipse, #729fff28, transparent 65%);
-}
-.stars {
-  position: absolute;
-  top: 650px;
-  left: 50%;
-  width: 2px;
-  height: 2px;
-  background: #bdcaff60;
-  box-shadow:
-    -150px 14px #bdcaff40,
-    125px 10px #bdcaff70,
-    -70px 45px #bdcaff50,
-    70px 35px #bdcaff50,
-    185px 59px #bdcaff40,
-    -230px 52px #bdcaff30,
-    37px -25px #bdcaff50;
-}
 .heroContent {
   position: relative;
   z-index: 1;
@@ -108,6 +27,8 @@
   font-weight: 550;
   margin: 24px auto 0;
   max-width: 850px;
+  filter: drop-shadow(0 1px 3px var(--background))
+    drop-shadow(0 0 6px var(--background));
 }
 .heroContent h1 span {
   background: linear-gradient(
@@ -125,6 +46,10 @@
   margin: 25px auto 0;
   max-width: 480px;
   letter-spacing: -0.015em;
+  text-shadow:
+    0 1px 2px var(--background),
+    0 0 6px var(--background),
+    0 0 14px var(--background);
 }
 .heroActions {
   display: flex;
@@ -241,27 +166,10 @@
   .hero {
     padding-top: 150px;
   }
-  .horizon {
-    width: 800px;
-    height: 800px;
-    top: 160px;
-  }
 }
 @media (max-width: 640px) {
   .hero {
     padding-top: 116px;
-  }
-  .atmosphere {
-    height: 700px;
-  }
-  .horizon {
-    top: 145px;
-    width: 560px;
-    height: 650px;
-  }
-  .beams {
-    width: 500px;
-    height: 270px;
   }
   .heroContent {
     padding-inline: 1rem;
@@ -287,13 +195,6 @@
     padding-inline: 18px;
     font-size: 12px;
     height: 43px;
-  }
-  .atmosphere::after {
-    top: 440px;
-    width: 450px;
-  }
-  .stars {
-    top: 535px;
   }
   .valueStrip {
     padding-top: 36px;

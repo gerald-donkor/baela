@@ -45,48 +45,28 @@ test("theme preference survives reload", async ({ page }, testInfo) => {
   await expect(page.locator("html")).toHaveClass("dark");
 });
 
-test("learning demo updates sample progress and resets independently of enrollment", async ({
+test("landing preview opens the sample learning workspace", async ({
   page,
 }) => {
   await page.goto("/");
   await page.getByRole("link", { name: "Try the demo", exact: true }).click();
-  const demo = page.getByRole("region", { name: "Interactive learning demo" });
-  await expect(demo.getByText("Sample content", { exact: true })).toBeVisible();
-  await demo
-    .getByRole("button", { name: "Explore a lesson", exact: true })
-    .click();
+  const demo = page.getByRole("region", { name: "Learning workspace preview" });
   await expect(
     demo.getByRole("heading", {
-      name: "Start with a little curiosity",
+      name: "Setting up authentication",
       exact: true,
     }),
   ).toBeVisible();
+  await expect(
+    demo.getByRole("button", { name: "Mark complete", exact: true }),
+  ).toBeDisabled();
   await demo
-    .getByRole("button", { name: "Mark complete", exact: true })
+    .getByRole("link", { name: "Explore the workspace", exact: true })
     .click();
+  await expect(page).toHaveURL(/\/courses$/);
   await expect(
-    demo.getByRole("progressbar", { name: "Demo course progress" }),
-  ).toHaveAttribute("value", "33");
-  await demo
-    .getByRole("button", { name: "Completed · Undo", exact: true })
-    .click();
-  await expect(
-    demo.getByRole("progressbar", { name: "Demo course progress" }),
-  ).toHaveAttribute("value", "0");
-  await demo.getByRole("button", { name: /Make space to focus/ }).click();
-  await expect(
-    demo.getByRole("heading", { name: "Make space to focus", exact: true }),
+    page.getByRole("heading", { name: "Your next chapter starts here." }),
   ).toBeVisible();
-  await demo
-    .getByRole("button", { name: "Mark complete", exact: true })
-    .click();
-  await demo.getByRole("button", { name: "Reset demo", exact: true }).click();
-  await expect(
-    demo.getByRole("progressbar", { name: "Demo course progress" }),
-  ).toHaveAttribute("value", "0");
-  await expect(
-    page.getByRole("button", { name: "Enrollment opens soon" }),
-  ).toHaveCount(2);
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
@@ -249,11 +229,11 @@ test("review stories and FAQ answers are usable by keyboard", async ({
   await question.focus();
   await page.keyboard.press("Enter");
   await expect(
-    faq.getByRole("link", { name: "interactive demo", exact: true }),
+    faq.getByRole("link", { name: "workspace preview", exact: true }),
   ).toBeVisible();
   await page.keyboard.press("Enter");
   await expect(
-    faq.getByRole("link", { name: "interactive demo", exact: true }),
+    faq.getByRole("link", { name: "workspace preview", exact: true }),
   ).toBeHidden();
 });
 
@@ -299,10 +279,13 @@ test("buttons and expandable controls show a pointer without enabling closed enr
   await page.goto("/");
   const actions = [
     page.getByRole("link", { name: "Explore courses", exact: true }),
-    page.getByRole("button", { name: "Explore a lesson", exact: true }),
+    page.getByRole("link", { name: "Explore the workspace", exact: true }),
     page.getByRole("button", { name: "Next sample review", exact: true }),
     page.getByRole("button", { name: "Enrollment opens soon" }).first(),
-    page.locator("summary").first(),
+    page
+      .getByRole("region", { name: "A little clarity, before you begin." })
+      .locator("summary")
+      .first(),
   ];
   for (const action of actions) {
     await action.hover();
@@ -356,7 +339,6 @@ test("the design system gallery shares theme tokens and accessible progress", as
 });
 test("protected pages redirect anonymous visitors", async ({ page }) => {
   for (const path of [
-    "/dashboard",
     "/account",
     "/admin",
     "/admin/users",

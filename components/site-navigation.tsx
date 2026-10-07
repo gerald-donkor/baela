@@ -52,11 +52,11 @@ export function SiteNavigation({
     };
   }, [open]);
   const links = [
-    { href: "/#courses", label: "Courses" },
+    { href: "/courses", label: "Courses" },
     { href: "/#how-it-works", label: "How it works" },
     { href: "/#reviews", label: "Reviews" },
     { href: "/#pricing", label: "Pricing" },
-    ...(signedIn ? [{ href: "/dashboard", label: "My learning" }] : []),
+    { href: "/dashboard", label: "My learning" },
     ...(admin ? [{ href: "/admin", label: "Admin" }] : []),
   ];
   return (

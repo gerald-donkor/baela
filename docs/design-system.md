@@ -7,7 +7,7 @@ Horizon takes its visual direction from [`design/landing-page-ref.png`](../desig
 - [`design/tokens.css`](../design/tokens.css) defines the palette, radii, surface hierarchy, shadows, and content width. `app/globals.css` imports it and maps semantic colors to Tailwind utilities.
 - [`/design-system`](../app/design-system/page.tsx) is a browsable component gallery with both themes, typography, palette, controls, course cards, and progress.
 - `components/ui/` contains reusable primitives. Extend these before adding page-specific duplicates.
-- `app/page.module.css` owns the landing-page horizon and composition; `components/landing/learning-demo.module.css` owns the interactive demo. Keep these effects scoped.
+- `app/page.module.css` owns the landing-page horizon and composition; `components/landing/learning-demo.module.css` owns the lesson workspace preview frame; `components/courses/course-ui.module.css` owns the course UI. Keep these effects scoped.
 
 ## Color and surfaces
 
@@ -37,7 +37,7 @@ New visitors see dark mode. The header toggle allows light mode; `next-themes` p
 - **Section titles:** `text-3xl sm:text-4xl font-medium tracking-[-.045em]` through `SectionHeading`.
 - **Card titles:** 18–20px, medium/semibold, tight tracking.
 - **Body:** 14–16px with 1.7–1.85 line height. Use `text-muted-foreground` for secondary copy.
-- **Metadata:** 12px. The interactive demo uses 12px labels and 13–14px reading and control text; only its decorative window bar reduces to 11px on mobile.
+- **Metadata:** 12px. Course pages use 12–13px body copy and compact 10–12px navigation. The landing preview uses a denser illustrative scale; complete lessons are available through its workspace links.
 - **Eyebrow:** `.eyebrow` uses 12px, sentence case, medium weight, and primary color. Keep these labels short and useful; step numbers belong to the learning sequence.
 - **Spacing:** Tailwind's 4px grid. Use 16–24px gaps, 24–32px card padding, 64–96px section spacing.
 - **Container:** `.shell` caps content at `--page-width: 1120px`; gutters are 24px, falling to 16px on small screens.
@@ -96,7 +96,7 @@ Use real links for navigation and buttons for state changes. Keep focus rings vi
 
 Buttons, links, selects, checkbox/radio inputs, and expandable summaries use a pointer cursor. The shared `Button` declares it explicitly, including when rendered through `asChild`. Disabled buttons keep native disabled behavior and opacity; they do not use `pointer-events: none`, which would pass hovering through to the default page cursor.
 
-The landing preview is explicitly labeled **Interactive demo / Sample content**. Its sample lessons and completion state live only in `LearningDemo` component state and reset on reload. They do not create catalog entries, entitlements, purchases, or saved learning progress. Real catalog and checkout behavior remain server-backed; unconfigured enrollment continues to show the closed state.
+The landing preview is labeled **Sample workspace** and uses the same three-column course layout as the full course pages. Six fixture courses, 18 sections, 72 lessons, instructor profiles, and fixed student progress live in `lib/sample-courses.ts`. `/courses` shows the collection, `/courses/[courseSlug]` shows an overview, and `/learn/[courseSlug]/[lessonId]` shows a lesson. Anonymous `/dashboard` visitors can explore the sample learning library. Playback and completion are static; category filters, search, lesson navigation, disclosures, and content tabs only operate on the sample UI. These screens do not create catalog entries, entitlements, purchases, or saved progress. Other course slugs and authenticated dashboards keep their existing server-backed behavior. Unconfigured enrollment continues to show the closed state.
 
 ## Reviews and FAQ patterns
 
