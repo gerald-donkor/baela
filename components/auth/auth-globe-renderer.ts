@@ -3,8 +3,6 @@ import {
   BufferGeometry,
   Float32BufferAttribute,
   Group,
-  LineLoop,
-  LineBasicMaterial,
   Mesh,
   OrthographicCamera,
   Points,
@@ -12,13 +10,14 @@ import {
   ShaderMaterial,
   SphereGeometry,
   Vector2,
-  Vector3,
   WebGLRenderer,
 } from "three";
+import { createCountryBorders } from "@/components/landing/globe-geography";
+import { createGlobeInteraction } from "@/components/landing/globe-interaction";
 import { createGlobeEffects } from "@/components/landing/globe-effects";
 
 // Reuse the hero's geography, atmospheric shells, and illuminated connections,
-// with a complete sphere and a pair of quiet orbital paths for authentication.
+// with a complete sphere for authentication.
 export function createAuthGlobeRenderer(canvas: HTMLCanvasElement) {
   const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const abort = new AbortController();
@@ -26,13 +25,13 @@ export function createAuthGlobeRenderer(canvas: HTMLCanvasElement) {
   const camera = new OrthographicCamera(-1.6, 1.6, 1.24, -1.24, 0.1, 20);
   camera.position.z = 5;
   const globe = new Group();
-  const orbits = new Group();
   globe.rotation.set(0.12, -0.28, -0.12);
-  scene.add(globe, orbits);
+  scene.add(globe);
   const geometries: BufferGeometry[] = [];
-  const materials: (ShaderMaterial | LineBasicMaterial)[] = [];
+  const materials: ShaderMaterial[] = [];
   let renderer: WebGLRenderer | null = null;
   let effects: ReturnType<typeof createGlobeEffects> | null = null;
+  let borders: ReturnType<typeof createCountryBorders> | null = null;
   let dots: ShaderMaterial | null = null;
   let frame = 0;
   let elapsed = 0;
@@ -40,17 +39,33 @@ export function createAuthGlobeRenderer(canvas: HTMLCanvasElement) {
   let ready = false;
   let disposed = false;
   let visible = false;
+  const interaction = createGlobeInteraction(
+    globe,
+    motion,
+    () => ready && visible && !disposed && !document.hidden,
+    (event) => {
+      const bounds = canvas.getBoundingClientRect();
+      const radius = bounds.height / 2.48;
+      return {
+        x: (event.clientX - bounds.left - bounds.width / 2) / radius,
+        y: (event.clientY - bounds.top - bounds.height / 2) / radius,
+      };
+    },
+    0.028,
+  );
 
   const render = () => {
     if (!renderer || !ready || disposed) return;
-    globe.rotation.y = -0.28 + elapsed * 0.028;
-    orbits.rotation.y = elapsed * 0.018;
     if (dots) dots.uniforms.elapsed.value = elapsed;
     effects?.update(elapsed);
     renderer.render(scene, camera);
   };
   const tick = (time: number) => {
-    elapsed += previousTime ? Math.min((time - previousTime) / 1000, 0.05) : 0;
+    const delta = previousTime
+      ? Math.min((time - previousTime) / 1000, 0.05)
+      : 0;
+    elapsed += delta;
+    interaction.update(delta);
     previousTime = time;
     render();
     frame = requestAnimationFrame(tick);
@@ -58,6 +73,7 @@ export function createAuthGlobeRenderer(canvas: HTMLCanvasElement) {
   const sync = () => {
     cancelAnimationFrame(frame);
     previousTime = 0;
+    interaction.sync();
     if (!ready || disposed) return;
     render();
     if (visible && !document.hidden && !motion.matches)
@@ -98,11 +114,16 @@ export function createAuthGlobeRenderer(canvas: HTMLCanvasElement) {
 
   const initialize = async () => {
     try {
-      const response = await fetch("/images/landing/land-points.json", {
-        signal: abort.signal,
-      });
-      if (!response.ok) throw new Error("Globe geography unavailable");
-      const land = (await response.json()) as [number, number][];
+      const [landResponse, borderResponse] = await Promise.all([
+        fetch("/images/landing/land-points.json", { signal: abort.signal }),
+        fetch("/images/landing/country-borders.json", { signal: abort.signal }),
+      ]);
+      if (!landResponse.ok || !borderResponse.ok)
+        throw new Error("Globe geography unavailable");
+      const [land, rings] = await Promise.all([
+        landResponse.json() as Promise<[number, number][]>,
+        borderResponse.json() as Promise<[number, number][][]>,
+      ]);
       if (disposed) return;
       const context = canvas.getContext("webgl2", {
         alpha: true,
@@ -189,28 +210,8 @@ export function createAuthGlobeRenderer(canvas: HTMLCanvasElement) {
       geometries.push(continents);
       materials.push(dots);
       globe.add(new Points(continents, dots));
+      borders = createCountryBorders(globe, rings);
       effects = createGlobeEffects(globe, scene);
-
-      for (const [tilt, rotation] of [
-        [0.42, -0.35],
-        [1.13, 0.58],
-      ]) {
-        const points = Array.from({ length: 180 }, (_, index) => {
-          const angle = (index / 180) * Math.PI * 2;
-          return new Vector3(Math.cos(angle) * 1.26, Math.sin(angle) * 1.26, 0);
-        });
-        const geometry = new BufferGeometry().setFromPoints(points);
-        const material = new LineBasicMaterial({
-          color: 0x789fed,
-          transparent: true,
-          opacity: 0.22,
-        });
-        const orbit = new LineLoop(geometry, material);
-        orbit.rotation.set(tilt, rotation, -0.3);
-        geometries.push(geometry);
-        materials.push(material);
-        orbits.add(orbit);
-      }
 
       ready = true;
       resize();
@@ -225,6 +226,7 @@ export function createAuthGlobeRenderer(canvas: HTMLCanvasElement) {
   return {
     dispose() {
       disposed = true;
+      interaction.dispose();
       abort.abort();
       cancelAnimationFrame(frame);
       observer.disconnect();
@@ -235,6 +237,7 @@ export function createAuthGlobeRenderer(canvas: HTMLCanvasElement) {
       geometries.forEach((geometry) => geometry.dispose());
       materials.forEach((material) => material.dispose());
       effects?.dispose();
+      borders?.dispose();
       renderer?.dispose();
       scene.clear();
       canvas.dataset.ready = "false";

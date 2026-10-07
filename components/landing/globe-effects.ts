@@ -12,24 +12,29 @@ import {
   SphereGeometry,
   TubeGeometry,
 } from "three";
-import { artworkLocation } from "./globe-projection";
+import { geographicLocation } from "./globe-geography";
 
-// Match the reference artwork's illuminated hubs. They are reconstructed on
-// the sphere, so trails and lights rotate together rather than sliding over it.
+// Actual city coordinates distribute hubs and routes around the entire Earth.
 const cities = [
-  [589, 438], // eastern North America
-  [911, 380], // northern Europe
-  [961, 410], // central Europe
-  [928, 517], // western Africa
-  [701, 702], // eastern South America
-  [1015, 626], // eastern Africa
-  [1058, 512], // Middle East
-  [1210, 549], // southern Asia
-  [1312, 609], // Southeast Asia
-  [1297, 414], // eastern Asia
-  [1046, 782], // southern Africa
-  [1395, 797], // Australia
-  [476, 488], // Central America
+  [-74.006, 40.713], // New York
+  [-0.128, 51.507], // London
+  [2.352, 48.857], // Paris
+  [-0.187, 5.603], // Accra
+  [-46.633, -23.551], // São Paulo
+  [36.822, -1.292], // Nairobi
+  [55.27, 25.205], // Dubai
+  [72.878, 19.076], // Mumbai
+  [103.82, 1.352], // Singapore
+  [139.692, 35.69], // Tokyo
+  [18.424, -33.925], // Cape Town
+  [151.209, -33.869], // Sydney
+  [-99.133, 19.433], // Mexico City
+  [-122.419, 37.775], // San Francisco
+  [-123.121, 49.283], // Vancouver
+  [-70.669, -33.449], // Santiago
+  [126.978, 37.566], // Seoul
+  [174.764, -36.849], // Auckland
+  [116.407, 39.904], // Beijing
 ];
 const connections = [
   [0, 1],
@@ -52,6 +57,17 @@ const connections = [
   [1, 9],
   [6, 9],
   [11, 8],
+  [13, 9],
+  [13, 14],
+  [14, 16],
+  [15, 4],
+  [15, 13],
+  [9, 16],
+  [16, 18],
+  [18, 7],
+  [17, 11],
+  [17, 15],
+  [11, 9],
 ];
 
 const routeVertex = `
@@ -112,14 +128,20 @@ export function createGlobeEffects(globe: Group, scene: Scene) {
   globe.add(effects);
 
   connections.forEach(([from, to], index) => {
-    const start = artworkLocation(...(cities[from] as [number, number]));
-    const end = artworkLocation(...(cities[to] as [number, number]));
+    const start = geographicLocation(...(cities[from] as [number, number]));
+    const end = geographicLocation(...(cities[to] as [number, number]));
     const height = 0.035 + start.angleTo(end) * 0.055;
     const samples = Array.from({ length: 33 }, (_, step) => {
       const progress = step / 32;
+      const angle = start.angleTo(end);
       return start
         .clone()
-        .lerp(end, progress)
+        .multiplyScalar(Math.sin((1 - progress) * angle) / Math.sin(angle))
+        .add(
+          end
+            .clone()
+            .multiplyScalar(Math.sin(progress * angle) / Math.sin(angle)),
+        )
         .normalize()
         .multiplyScalar(1.009 + Math.sin(progress * Math.PI) * height);
     });
@@ -153,7 +175,7 @@ export function createGlobeEffects(globe: Group, scene: Scene) {
   signalGeometry.setAttribute(
     "position",
     new Float32BufferAttribute(
-      cities.flatMap(([x, y]) => artworkLocation(x, y).toArray()),
+      cities.flatMap(([lon, lat]) => geographicLocation(lon, lat).toArray()),
       3,
     ),
   );

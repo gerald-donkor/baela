@@ -1,6 +1,6 @@
 // Natural Earth land outlines are public domain:
 // https://github.com/nvkelso/natural-earth-vector
-// Usage: node scripts/generate-globe-points.mjs /path/to/ne_110m_land.geojson
+// Usage: node scripts/generate-globe-points.mjs /path/to/ne_50m_admin_0_countries.geojson
 import { readFileSync, writeFileSync } from "node:fs";
 
 const land = JSON.parse(readFileSync(process.argv[2], "utf8"));
@@ -33,8 +33,8 @@ function inside(lon, lat, ring) {
 }
 
 const points = [];
-for (let lat = -84; lat <= 84; lat += 1.2) {
-  const spacing = 1.2 / Math.cos((lat * Math.PI) / 180);
+for (let lat = -89.5; lat <= 89.5; lat += 0.65) {
+  const spacing = 0.65 / Math.cos((lat * Math.PI) / 180);
   for (let lon = -180; lon < 180; lon += spacing) {
     const onLand = polygons.some(
       ({ bounds: [west, south, east, north], rings }) =>
@@ -53,3 +53,14 @@ writeFileSync(
   JSON.stringify(points) + "\n",
 );
 console.log(`Generated ${points.length} land points.`);
+
+// Retain the surveyed coastlines and country boundaries, independently of dots.
+const borders = polygons.flatMap(({ rings }) =>
+  rings.map((ring) =>
+    ring.map(([lon, lat]) => [Number(lon.toFixed(3)), Number(lat.toFixed(3))]),
+  ),
+);
+writeFileSync(
+  "public/images/landing/country-borders.json",
+  JSON.stringify(borders) + "\n",
+);
