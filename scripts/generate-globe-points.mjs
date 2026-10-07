@@ -54,13 +54,38 @@ writeFileSync(
 );
 console.log(`Generated ${points.length} land points.`);
 
-// Retain the surveyed coastlines and country boundaries, independently of dots.
-const borders = polygons.flatMap(({ rings }) =>
-  rings.map((ring) =>
-    ring.map(([lon, lat]) => [Number(lon.toFixed(3)), Number(lat.toFixed(3))]),
-  ),
-);
+// Keep each undirected segment once, including borders shared by countries.
+// Split paths at removed segments so consumers never connect across a gap.
+const borders = [];
+const segments = new Set();
+for (const { rings } of polygons) {
+  for (const ring of rings) {
+    const coordinates = ring.map(([lon, lat]) => [
+      Number(lon.toFixed(3)),
+      Number(lat.toFixed(3)),
+    ]);
+    let path = [];
+    for (let i = 1; i < coordinates.length; i++) {
+      const start = coordinates[i - 1];
+      const end = coordinates[i];
+      const a = start.join(",");
+      const b = end.join(",");
+      if (a === b) continue;
+      const key = a < b ? `${a}|${b}` : `${b}|${a}`;
+      if (segments.has(key)) {
+        if (path.length > 1) borders.push(path);
+        path = [];
+        continue;
+      }
+      segments.add(key);
+      if (!path.length) path.push(start);
+      path.push(end);
+    }
+    if (path.length > 1) borders.push(path);
+  }
+}
 writeFileSync(
   "public/images/landing/country-borders.json",
   JSON.stringify(borders) + "\n",
 );
+console.log(`Generated ${segments.size} unique border segments.`);

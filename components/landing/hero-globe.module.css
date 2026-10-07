@@ -47,8 +47,10 @@
   opacity: 1;
 }
 
-.image:has(.canvas[data-ready="true"]) {
-  background-image: none;
+@media (min-width: 641px) {
+  .image:has(.canvas[data-ready="true"]) {
+    background-image: none;
+  }
 }
 
 @media (max-width: 640px) {

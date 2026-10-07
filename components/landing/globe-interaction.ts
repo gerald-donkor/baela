@@ -5,7 +5,10 @@ export function createGlobeInteraction(
   globe: Group,
   motion: MediaQueryList,
   isActive: () => boolean,
-  projectPointer: (event: MouseEvent) => { x: number; y: number },
+  projectPointer: (event: Pick<MouseEvent, "clientX" | "clientY">) => {
+    x: number;
+    y: number;
+  },
   idleSpeed: number,
 ) {
   const initialOrientation = globe.quaternion.clone();
@@ -14,6 +17,7 @@ export function createGlobeInteraction(
   let hovering = false;
   let resetting = false;
   let resetAnimation: gsap.core.Timeline | null = null;
+  let touchId: number | null = null;
   const pointer = new Vector2();
   const target = new Vector2();
   const angles = { x: 0, y: 0 };
@@ -24,20 +28,11 @@ export function createGlobeInteraction(
 
   // Observe the pointer without covering page links or forms.
   const resetPointer = () => {
+    touchId = null;
     hovering = false;
     pointer.set(0, 0);
   };
-  const trackPointer = (event: PointerEvent) => {
-    if (resetting) return;
-    if (event.pointerType === "touch" || !isActive() || motion.matches) {
-      resetPointer();
-      return;
-    }
-    const { x, y } = projectPointer(event);
-    if (x * x + y * y > 1) {
-      resetPointer();
-      return;
-    }
+  const movePointer = (x: number, y: number) => {
     if (hovering) {
       // Accumulate movement so repeated sweeps can turn through any angle.
       target.x += (y - pointer.y) * Math.PI;
@@ -52,6 +47,74 @@ export function createGlobeInteraction(
     }
     hovering = true;
     pointer.set(x, y);
+  };
+  const trackPointer = (event: PointerEvent) => {
+    // Touch gestures have their own lifecycle below, including scroll control.
+    if (event.pointerType === "touch" || touchId !== null) return;
+    if (resetting) return;
+    if (!isActive() || motion.matches) {
+      resetPointer();
+      return;
+    }
+    const { x, y } = projectPointer(event);
+    if (x * x + y * y > 1) {
+      resetPointer();
+      return;
+    }
+    movePointer(x, y);
+  };
+
+  const startTouch = (event: TouchEvent) => {
+    resetPointer();
+    if (
+      resetting ||
+      !isActive() ||
+      motion.matches ||
+      event.touches.length !== 1
+    )
+      return;
+    if (
+      event.target instanceof Element &&
+      event.target.closest(
+        "a, button, input, textarea, select, [contenteditable]",
+      )
+    )
+      return;
+    const touch = event.touches[0];
+    const { x, y } = projectPointer(touch);
+    if (x * x + y * y > 1) return;
+    // Claim only gestures starting on the globe, leaving page controls usable.
+    // Cancel native panning before it can cancel the rotation gesture.
+    event.preventDefault();
+    touchId = touch.identifier;
+    movePointer(x, y);
+  };
+  const moveTouch = (event: TouchEvent) => {
+    if (touchId === null) return;
+    if (
+      resetting ||
+      !isActive() ||
+      motion.matches ||
+      event.touches.length !== 1
+    ) {
+      resetPointer();
+      return;
+    }
+    const touch = Array.from(event.touches).find(
+      (touch) => touch.identifier === touchId,
+    );
+    if (!touch) return;
+    event.preventDefault();
+    const { x, y } = projectPointer(touch);
+    movePointer(x, y);
+  };
+  const endTouch = (event: TouchEvent) => {
+    if (
+      Array.from(event.changedTouches).some(
+        (touch) => touch.identifier === touchId,
+      )
+    )
+      resetPointer();
   };
 
   const bounceAndReset = (event: MouseEvent) => {
@@ -139,6 +202,10 @@ export function createGlobeInteraction(
   };
 
   document.addEventListener("pointermove", trackPointer, { passive: true });
+  document.addEventListener("touchstart", startTouch, { passive: false });
+  document.addEventListener("touchmove", moveTouch, { passive: false });
+  document.addEventListener("touchend", endTouch);
+  document.addEventListener("touchcancel", endTouch);
   document.addEventListener("mousedown", preventDoubleClickSelection);
   document.addEventListener("dblclick", bounceAndReset);
   document.addEventListener("pointerleave", resetPointer);
@@ -169,6 +236,10 @@ export function createGlobeInteraction(
       gsap.killTweensOf(angles);
       resetAnimation?.kill();
       document.removeEventListener("pointermove", trackPointer);
+      document.removeEventListener("touchstart", startTouch);
+      document.removeEventListener("touchmove", moveTouch);
+      document.removeEventListener("touchend", endTouch);
+      document.removeEventListener("touchcancel", endTouch);
       document.removeEventListener("mousedown", preventDoubleClickSelection);
       document.removeEventListener("dblclick", bounceAndReset);
       document.removeEventListener("pointerleave", resetPointer);
