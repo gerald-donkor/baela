@@ -10,42 +10,29 @@ import {
   Scene,
   ShaderMaterial,
   SphereGeometry,
-  Texture,
-  TextureLoader,
   WebGLRenderer,
 } from "three";
+import { createCountryBorders } from "./globe-geography";
 import { createGlobeEffects } from "./globe-effects";
+import { createGlobeInteraction } from "./globe-interaction";
 import { globeProjection } from "./globe-projection";
 
 const surfaceVertex = `
   varying vec3 facing;
-  varying vec3 localNormal;
   void main() {
-    localNormal = normal;
     facing = normalize(normalMatrix * normal);
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
   }
 `;
 const surfaceFragment = `
   uniform float elapsed;
-  uniform sampler2D artwork;
   varying vec3 facing;
-  varying vec3 localNormal;
   void main() {
     vec3 viewNormal = normalize(facing);
-    vec3 local = normalize(localNormal);
     float rim = pow(1.0 - max(0.0, viewNormal.z), 3.0);
     float topLight = smoothstep(-0.4, 0.9, viewNormal.y);
     vec3 ocean = vec3(0.006, 0.012, 0.036);
-    vec2 sourceUV = vec2(0.5 + local.x * 0.43, 0.069 + local.y * 0.76403826);
-    vec3 detail = texture2D(artwork, clamp(sourceUV, 0.001, 0.999)).rgb;
-    // Lift the luminous dots and surface detail without brightening the ocean.
-    detail *= 1.0 + 0.32 * smoothstep(0.08, 0.5, max(detail.r, max(detail.g, detail.b)));
-    // Suppress the photographed rim: atmospheric lighting belongs to the
-    // camera-facing silhouette, while the continents rotate with the surface.
-    float coverage = smoothstep(0.16, 0.42, local.z) * smoothstep(-0.09, 0.0, local.y);
-    float shimmer = 0.97 + 0.03 * sin(elapsed * 1.25663706 + local.x * 13.0 + local.y * 9.0);
-    vec3 surface = mix(ocean, detail * shimmer, coverage);
+    vec3 surface = ocean;
     vec3 blue = vec3(0.07, 0.12, 0.43) * rim * (0.45 + topLight);
     float edge = pow(1.0 - max(0.0, viewNormal.z), 10.0);
     gl_FragColor = vec4(surface + blue + vec3(0.72, 0.78, 1.0) * edge, 1.0);
@@ -59,9 +46,7 @@ const dotsVertex = `
   varying float visibility;
   void main() {
     vec3 facing = normalize(mat3(modelViewMatrix) * normalize(position));
-    vec3 local = normalize(position);
-    float photographic = smoothstep(-0.2, 0.0, local.z) * smoothstep(-0.12, -0.09, local.y);
-    visibility = smoothstep(0.02, 0.18, facing.z) * (1.0 - photographic);
+    visibility = smoothstep(0.02, 0.18, facing.z);
     brightness = 0.86 + 0.14 * sin(seed * 71.0 + elapsed * 1.25663706);
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     gl_PointSize = pointSize * (0.7 + 0.3 * max(0.0, facing.z));
@@ -96,12 +81,31 @@ export function createGlobeRenderer(canvas: HTMLCanvasElement) {
   let dots: ShaderMaterial | null = null;
   let ocean: ShaderMaterial | null = null;
   let effects: ReturnType<typeof createGlobeEffects> | null = null;
-  let artwork: Texture | null = null;
+  let borders: ReturnType<typeof createCountryBorders> | null = null;
   const geometries: BufferGeometry[] = [];
   const materials: ShaderMaterial[] = [];
   let ready = false;
   let disposed = false;
   let inView = false;
+  let previousRotationTime = 0;
+  const interaction = createGlobeInteraction(
+    globe,
+    motion,
+    () => ready && inView && !disposed && !document.hidden,
+    (event) => {
+      const bounds = canvas.getBoundingClientRect();
+      const radius = (bounds.height * globe.scale.y) / 2;
+      return {
+        x: (event.clientX - bounds.left - bounds.width / 2) / radius,
+        y:
+          (event.clientY -
+            bounds.top -
+            (bounds.height * (1 - globe.position.y)) / 2) /
+          radius,
+      };
+    },
+    0.008,
+  );
 
   const render = () => {
     if (
@@ -113,7 +117,10 @@ export function createGlobeRenderer(canvas: HTMLCanvasElement) {
       return;
     const elapsed = motion.matches ? 0 : animation.elapsed;
     const rotationTime = motion.matches ? 0 : (tween?.totalTime() ?? elapsed);
-    globe.rotation.y = rotationTime * 0.008;
+    interaction.update(
+      Math.max(0, Math.min(rotationTime - previousRotationTime, 0.05)),
+    );
+    previousRotationTime = rotationTime;
     if (dots) dots.uniforms.elapsed.value = elapsed;
     if (ocean) ocean.uniforms.elapsed.value = elapsed;
     effects?.update(elapsed);
@@ -121,6 +128,7 @@ export function createGlobeRenderer(canvas: HTMLCanvasElement) {
   };
   const sync = () => {
     tween?.pause();
+    interaction.sync();
     if (!ready || disposed) return;
     render();
     if (!motion.matches && inView && !document.hidden) tween?.resume();
@@ -160,22 +168,17 @@ export function createGlobeRenderer(canvas: HTMLCanvasElement) {
 
   const initialize = async () => {
     try {
-      // Preserve the reference's surface detail on the reconstructed front
-      // hemisphere; full geographic coordinates continue around the back.
-      const response = await fetch("/images/landing/land-points.json", {
-        signal: abort.signal,
-      });
-      if (!response.ok) throw new Error("Globe data unavailable");
-      const land = (await response.json()) as [number, number][];
+      const [landResponse, borderResponse] = await Promise.all([
+        fetch("/images/landing/land-points.json", { signal: abort.signal }),
+        fetch("/images/landing/country-borders.json", { signal: abort.signal }),
+      ]);
+      if (!landResponse.ok || !borderResponse.ok)
+        throw new Error("Globe geography unavailable");
+      const [land, rings] = await Promise.all([
+        landResponse.json() as Promise<[number, number][]>,
+        borderResponse.json() as Promise<[number, number][][]>,
+      ]);
       if (disposed) return;
-      const texture = await new TextureLoader().loadAsync(
-        "/images/landing/globe.png",
-      );
-      if (disposed) {
-        texture.dispose();
-        return;
-      }
-      artwork = texture;
       const context = canvas.getContext("webgl2", {
         alpha: true,
         antialias: true,
@@ -193,7 +196,7 @@ export function createGlobeRenderer(canvas: HTMLCanvasElement) {
       renderer.setClearColor(0x000000, 0);
       const surface = new SphereGeometry(1, 96, 64);
       ocean = new ShaderMaterial({
-        uniforms: { elapsed: { value: 0 }, artwork: { value: artwork } },
+        uniforms: { elapsed: { value: 0 } },
         vertexShader: surfaceVertex,
         fragmentShader: surfaceFragment,
       });
@@ -230,6 +233,7 @@ export function createGlobeRenderer(canvas: HTMLCanvasElement) {
       geometries.push(continents);
       materials.push(dots);
       globe.add(new Points(continents, dots));
+      borders = createCountryBorders(globe, rings);
       effects = createGlobeEffects(globe, scene);
       ready = true;
       tween = gsap.to(animation, {
@@ -255,6 +259,7 @@ export function createGlobeRenderer(canvas: HTMLCanvasElement) {
       disposed = true;
       abort.abort();
       tween?.kill();
+      interaction.dispose();
       observer.disconnect();
       resizeObserver.disconnect();
       motion.removeEventListener("change", sync);
@@ -263,7 +268,7 @@ export function createGlobeRenderer(canvas: HTMLCanvasElement) {
       geometries.forEach((geometry) => geometry.dispose());
       materials.forEach((material) => material.dispose());
       effects?.dispose();
-      artwork?.dispose();
+      borders?.dispose();
       renderer?.dispose();
       scene.clear();
       canvas.dataset.ready = "false";

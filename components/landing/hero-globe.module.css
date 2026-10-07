@@ -21,7 +21,7 @@
   max-width: 1672px;
   aspect-ratio: 1672 / 941;
   transform: translateX(-50%);
-  background: url("/images/landing/globe.png") center / cover no-repeat;
+  background: url("/images/landing/hero-globe.svg") center / cover no-repeat;
   opacity: 1;
   filter: invert(1) hue-rotate(180deg) saturate(1.15);
   mask-image: linear-gradient(
@@ -47,6 +47,12 @@
   opacity: 1;
 }
 
+@media (min-width: 641px) {
+  .image:has(.canvas[data-ready="true"]) {
+    background-image: none;
+  }
+}
+
 @media (max-width: 640px) {
   .root {
     height: 700px;
@@ -61,5 +67,9 @@
 @media (prefers-reduced-motion: reduce) {
   .canvas {
     display: none;
+  }
+
+  .image:has(.canvas[data-ready="true"]) {
+    background-image: url("/images/landing/hero-globe.svg");
   }
 }
