@@ -1,3 +1,5 @@
+import { StudioHeading } from "@/components/admin/studio-ui";
+import styles from "@/components/admin/studio.module.css";
 import { requireAdminPage } from "@/lib/auth/server";
 import { desc, eq } from "drizzle-orm";
 import { withDb } from "@/lib/db";
@@ -15,14 +17,13 @@ export default async function Refunds() {
   );
   return (
     <section>
-      <h2 className="text-2xl font-medium mb-3">Refund requests</h2>
-      <p className="text-muted-foreground mb-6">
-        Review requests here. Issue approved refunds in Polar; confirmed refunds
-        update access automatically.
-      </p>
+      <StudioHeading
+        title="Refund requests"
+        description="Review requests here. Issue approved refunds in Polar; confirmed refunds update access automatically."
+      />
       <div className="space-y-5">
         {rows.map(({ request: r, user }) => (
-          <article key={r.id} className="border rounded-xl p-6">
+          <article key={r.id} className={styles.panel}>
             <div className="flex justify-between">
               <h3 className="font-medium">
                 {user.name} · {user.email}
@@ -65,7 +66,7 @@ export default async function Refunds() {
           </article>
         ))}
         {!rows.length && (
-          <p className="p-8 border rounded-xl text-muted-foreground">
+          <p className={`${styles.panel} text-muted-foreground text-sm`}>
             No refund requests yet.
           </p>
         )}

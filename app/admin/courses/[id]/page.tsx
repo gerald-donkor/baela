@@ -2,7 +2,14 @@ import { requireAdminPage } from "@/lib/auth/server";
 import { notFound } from "next/navigation";
 import { asc, eq, inArray } from "drizzle-orm";
 import { withDb } from "@/lib/db";
-import { courses, sections, lessons, revisions, assets } from "@/lib/db/schema";
+import {
+  courses,
+  sections,
+  lessons,
+  revisions,
+  assets,
+  offers,
+} from "@/lib/db/schema";
 import { CourseEditor } from "@/components/admin/course-editor";
 export default async function EditCourse({
   params,
@@ -50,6 +57,9 @@ export default async function EditCourse({
             )
         : [],
       media: await db.select().from(assets),
+      offer:
+        (await db.query.offers.findFirst({ where: eq(offers.courseId, id) })) ||
+        null,
     };
   });
   if (!data) notFound();

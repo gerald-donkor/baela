@@ -9,12 +9,18 @@ export function CommandForm({
   label = "Save changes",
   danger = false,
   redirectTo,
+  onSuccess,
+  disabled = false,
+  variant,
 }: {
   base: Record<string, unknown>;
   children?: React.ReactNode;
   label?: string;
   danger?: boolean;
   redirectTo?: string;
+  onSuccess?: () => void;
+  disabled?: boolean;
+  variant?: "default" | "outline" | "secondary";
 }) {
   const router = useRouter(),
     [busy, setBusy] = useState(false),
@@ -29,6 +35,7 @@ export function CommandForm({
       const values = Object.fromEntries(new FormData(e.currentTarget));
       const result = await command({ ...base, ...values });
       setMessage("Saved.");
+      onSuccess?.();
       if (redirectTo) router.push(redirectTo.replace("{id}", result.id));
       router.refresh();
     } catch (e) {
@@ -42,8 +49,8 @@ export function CommandForm({
       {children}
       <div className="flex flex-wrap items-center gap-4">
         <Button
-          disabled={busy}
-          variant={danger ? "destructive" : "default"}
+          disabled={busy || disabled}
+          variant={danger ? "destructive" : variant || "default"}
           size="sm"
         >
           {busy ? "Saving…" : label}

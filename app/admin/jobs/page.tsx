@@ -1,3 +1,5 @@
+import { StudioHeading } from "@/components/admin/studio-ui";
+import styles from "@/components/admin/studio.module.css";
 import { desc, isNull } from "drizzle-orm";
 import { requireAdminPage } from "@/lib/auth/server";
 import { withDb } from "@/lib/db";
@@ -15,14 +17,13 @@ export default async function JobsPage() {
   );
   return (
     <section>
-      <h2 className="text-2xl font-medium mb-3">Background jobs</h2>
-      <p className="text-muted-foreground mb-6">
-        Failed jobs require attention. Fix the underlying service or product
-        configuration before retrying.
-      </p>
+      <StudioHeading
+        title="Background jobs"
+        description="Check pending tasks and retry failed jobs after fixing their service or product configuration."
+      />
       <div className="space-y-4">
         {items.map((job) => (
-          <article key={job.id} className="border rounded-xl p-5">
+          <article key={job.id} className={styles.panel}>
             <h3 className="font-medium">
               {job.type.replaceAll("_", " ")} ·{" "}
               {job.failedAt ? "Failed" : "Pending"}
@@ -41,7 +42,7 @@ export default async function JobsPage() {
           </article>
         ))}
         {!items.length && (
-          <p className="border rounded-xl p-8 text-muted-foreground">
+          <p className={`${styles.panel} text-muted-foreground text-sm`}>
             All caught up.
           </p>
         )}

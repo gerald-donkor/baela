@@ -15,7 +15,7 @@ export const buttonVariants = cva(
           "border border-border bg-card/40 hover:not-disabled:border-primary/40 hover:not-disabled:bg-secondary",
         ghost: "hover:not-disabled:bg-secondary",
         destructive:
-          "bg-destructive text-white hover:not-disabled:bg-destructive/90",
+          "bg-destructive text-primary-foreground hover:not-disabled:bg-destructive/90",
       },
       size: {
         default: "h-11 px-6",

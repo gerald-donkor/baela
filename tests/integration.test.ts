@@ -752,3 +752,74 @@ it("rejects equal-character-length but unequal-byte-length cron tokens", async (
     ).status,
   ).toBe(401);
 });
+
+describe("Studio overview", () => {
+  it("counts curriculum without multiplying joins, excludes retired lessons and the administrator", async () => {
+    const { getStudioOverview } = await import("@/lib/server/studio");
+    state.viewer = {
+      id: userId,
+      authId: "auth-1",
+      state: "active",
+      admin: true,
+    };
+    await playableLesson();
+    const [second, third] = await db
+      .insert(schema.sections)
+      .values([
+        { courseId, title: "Second section", position: 1 },
+        { courseId, title: "Empty section", position: 2 },
+      ])
+      .returning();
+    await db.insert(schema.lessons).values([
+      { sectionId: second.id, title: "Draft", position: 0 },
+      {
+        sectionId: second.id,
+        title: "Published",
+        position: 1,
+        publishedRevisionId: "00000000-0000-4000-8000-000000000099",
+      },
+      {
+        sectionId: third.id,
+        title: "Retired",
+        position: 0,
+        publishedRevisionId: "00000000-0000-4000-8000-000000000099",
+        retiredAt: new Date(),
+      },
+    ]);
+    const [empty] = await db
+      .insert(schema.courses)
+      .values({ title: "Empty draft", slug: "empty" })
+      .returning();
+    await db.insert(schema.users).values([
+      {
+        authId: "auth-2",
+        name: "Active student",
+        email: "active@example.test",
+      },
+      {
+        authId: "auth-3",
+        name: "Deleting student",
+        email: "deleting@example.test",
+        state: "deleting",
+      },
+      {
+        authId: "auth-4",
+        name: "Deleted student",
+        email: "deleted@example.test",
+        state: "deleted",
+      },
+    ]);
+    const overview = await getStudioOverview();
+    expect(overview.studentCount).toBe(1);
+    expect(overview.items.find((item) => item.id === courseId)).toMatchObject({
+      sectionCount: 3,
+      lessonCount: 3,
+      publishedLessonCount: 2,
+    });
+    expect(overview.items.find((item) => item.id === empty.id)).toMatchObject({
+      sectionCount: 0,
+      lessonCount: 0,
+      publishedLessonCount: 0,
+    });
+  });
+});

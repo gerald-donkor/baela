@@ -1,3 +1,5 @@
+import { StudioHeading } from "@/components/admin/studio-ui";
+import styles from "@/components/admin/studio.module.css";
 import { requireAdminPage } from "@/lib/auth/server";
 import { desc, eq, inArray } from "drizzle-orm";
 import { withDb } from "@/lib/db";
@@ -40,8 +42,11 @@ export default async function Students({
   });
   return (
     <section>
-      <h2 className="text-2xl font-medium mb-6">Students & ownership</h2>
-      <div className="overflow-auto border rounded-xl">
+      <StudioHeading
+        title="Students"
+        description="See who’s learning with you, and the courses they can access."
+      />
+      <div className={styles.tableWrap}>
         <table className="w-full text-sm text-left">
           <thead className="bg-secondary">
             <tr>
@@ -52,6 +57,14 @@ export default async function Students({
             </tr>
           </thead>
           <tbody>
+            {!data.length && (
+              <tr>
+                <td colSpan={4} className="text-center text-muted-foreground">
+                  No students on this page. New students will appear here when
+                  they sign in.
+                </td>
+              </tr>
+            )}
             {data.map((u) => (
               <tr key={u.id} className="border-t">
                 <td className="p-4">{u.name}</td>
@@ -82,7 +95,11 @@ export default async function Students({
         </table>
       </div>
       <div className="flex gap-6 mt-5">
-        <a href={"?page=" + Math.max(1, page - 1)}>Previous</a>
+        {page > 1 && (
+          <a href={"?page=" + (page - 1)} className="text-primary">
+            Previous
+          </a>
+        )}
         <span>Page {page}</span>
         {data.length === 50 && <a href={"?page=" + (page + 1)}>Next</a>}
       </div>

@@ -1,3 +1,5 @@
+import { StudioHeading } from "@/components/admin/studio-ui";
+import styles from "@/components/admin/studio.module.css";
 import { requireAdminPage } from "@/lib/auth/server";
 import { withDb } from "@/lib/db";
 import { settings } from "@/lib/db/schema";
@@ -11,8 +13,64 @@ export default async function Settings() {
   const value = business?.value || {};
   const policies = await withDb((db) => db.select().from(settings));
   return (
-    <div className="max-w-2xl space-y-8">
-      <section className="border rounded-2xl p-6">
+    <div className="space-y-7">
+      <StudioHeading
+        title="Studio settings"
+        description="Manage your public profile, media setup, access plans, and policies."
+      />
+      <section className={styles.panel}>
+        <h2>ImageKit uploads</h2>
+        <p className={styles.panelDescription}>
+          Configure these values in your local environment and deployment
+          settings, then restart the application. Keep the private key on the
+          server.
+        </p>
+        <dl className="mt-5 space-y-3 text-xs">
+          {[
+            { label: "Private key", name: "IMAGEKIT_PRIVATE_KEY" },
+            { label: "Public key", name: "IMAGEKIT_PUBLIC_KEY" },
+            {
+              label: "URL endpoint",
+              name: "IMAGEKIT_URL_ENDPOINT",
+            },
+          ].map(({ label, name }) => {
+            const configured = !!(
+              process.env[name] ||
+              (name !== "IMAGEKIT_PRIVATE_KEY" &&
+                process.env["NEXT_PUBLIC_" + name])
+            );
+            return (
+              <div
+                key={name}
+                className="flex flex-wrap items-center justify-between gap-2 border-b pb-3"
+              >
+                <div>
+                  <dt className="font-medium">{label}</dt>
+                  <dd className="text-muted-foreground mt-1 break-all">
+                    {name}
+                  </dd>
+                </div>
+                <span
+                  className={
+                    configured ? "text-success" : "text-muted-foreground"
+                  }
+                >
+                  {configured ? "Configured" : "Missing"}
+                </span>
+              </div>
+            );
+          })}
+        </dl>
+        <a
+          href="https://imagekit.io/dashboard/developer"
+          target="_blank"
+          rel="noreferrer"
+          className={styles.textLink}
+        >
+          Open ImageKit developer settings
+        </a>
+      </section>
+      <section className={styles.panel}>
         <h2 className="text-xl font-medium mb-5">Business profile</h2>
         <CommandForm base={{ action: "business" }}>
           <label className="field-label">
@@ -73,7 +131,7 @@ export default async function Settings() {
         </p>
       </section>
       {(["monthly", "lifetime"] as const).map((kind) => (
-        <section className="border rounded-2xl p-6" key={kind}>
+        <section className={styles.panel} key={kind}>
           <h2 className="text-xl font-medium mb-4 capitalize">
             {kind} product
           </h2>
@@ -89,7 +147,7 @@ export default async function Settings() {
         </section>
       ))}
       {(["privacy", "terms", "refund-policy"] as const).map((key) => (
-        <section className="border rounded-2xl p-6" key={key}>
+        <section className={styles.panel} key={key}>
           <h2 className="text-xl font-medium mb-4 capitalize">
             {key.replaceAll("-", " ")}
           </h2>

@@ -343,6 +343,8 @@ test("protected pages redirect anonymous visitors", async ({ page }) => {
     "/admin",
     "/admin/users",
     "/admin/settings",
+    "/admin/media",
+    "/admin/courses/00000000-0000-4000-8000-000000000001",
   ]) {
     await page.goto(path);
     await expect(page).toHaveURL(/\/auth\/sign-in/);
