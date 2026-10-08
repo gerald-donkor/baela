@@ -59,7 +59,14 @@ export default async function CoursePage({
           <p className="text-lg text-muted-foreground my-6">
             {detail.course.summary}
           </p>
-          {preview && <LessonPlayer lessonId={preview.id} />}
+          {detail.trailer ? (
+            <section aria-label="Course trailer">
+              <h2 className="text-lg font-medium mb-3">Course trailer</h2>
+              <LessonPlayer courseId={detail.trailer.courseId} />
+            </section>
+          ) : (
+            preview && <LessonPlayer lessonId={preview.id} />
+          )}
           <div className="mt-10">
             <Markdown content={detail.course.description} />
           </div>

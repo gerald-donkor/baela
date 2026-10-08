@@ -41,6 +41,13 @@ const commands = z.discriminatedUnion("action", [
   }),
   z.object({ action: z.literal("delete-course"), id }),
   z.object({ action: z.literal("course-cover"), id, coverId: id.nullable() }),
+  z.object({
+    action: z.literal("course-trailer"),
+    id,
+    trailerId: id.nullable(),
+  }),
+  z.object({ action: z.literal("publish-course-trailer"), id, trailerId: id }),
+  z.object({ action: z.literal("remove-course-trailer"), id, trailerId: id }),
   z.object({ action: z.literal("retry-job"), id }),
   z.object({
     action: z.literal("section"),
@@ -106,6 +113,56 @@ export async function executeAdminCommand(input: unknown) {
       await tx.execute(
         sql`select pg_advisory_xact_lock(hashtext('baela-authoring'))`,
       );
+      if (
+        data.action === "course-trailer" ||
+        data.action === "publish-course-trailer" ||
+        data.action === "remove-course-trailer"
+      ) {
+        const course = await tx.query.courses.findFirst({
+          where: eq(courses.id, data.id),
+        });
+        if (!course) throw new HttpError(404, "Course not found.");
+        if (data.action === "remove-course-trailer") {
+          if (course.trailerId !== data.trailerId)
+            throw new HttpError(
+              409,
+              "The trailer changed. Refresh and try again.",
+            );
+          await tx
+            .update(courses)
+            .set({ trailerId: null })
+            .where(eq(courses.id, data.id));
+          return { saved: true };
+        }
+        if (data.trailerId) {
+          const video = await tx.query.assets.findFirst({
+            where: eq(assets.id, data.trailerId),
+          });
+          if (!video || video.kind !== "video" || !video.private)
+            throw new HttpError(400, "Choose a private trailer video.");
+          if (data.action === "publish-course-trailer") {
+            if (course.trailerDraftId !== data.trailerId)
+              throw new HttpError(
+                409,
+                "The trailer draft changed. Refresh and try again.",
+              );
+            if (!video.ready || video.duration <= 0)
+              throw new HttpError(
+                400,
+                "Verify trailer processing before publishing.",
+              );
+          }
+        }
+        await tx
+          .update(courses)
+          .set(
+            data.action === "course-trailer"
+              ? { trailerDraftId: data.trailerId }
+              : { trailerId: data.trailerId },
+          )
+          .where(eq(courses.id, data.id));
+        return { saved: true };
+      }
       if (data.action === "retry-job") {
         await tx
           .update(jobs)

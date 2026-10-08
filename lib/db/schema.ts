@@ -35,6 +35,8 @@ export const courses = pgTable("courses", {
   summary: text("summary").default("").notNull(),
   coverId: uuid("cover_id"),
   previewLessonId: uuid("preview_lesson_id"),
+  trailerId: uuid("trailer_asset_id").references(() => assets.id),
+  trailerDraftId: uuid("trailer_draft_asset_id").references(() => assets.id),
   status: text("status", { enum: ["draft", "published", "archived"] })
     .default("draft")
     .notNull(),

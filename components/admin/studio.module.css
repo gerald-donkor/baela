@@ -571,6 +571,30 @@
   display: grid;
   gap: 22px;
 }
+.trailerDraft {
+  display: grid;
+  gap: 16px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  min-width: 0;
+}
+.trailerFile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+.trailerFile > span:first-of-type {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.trailerActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 .panelHeader {
   margin-bottom: 24px;
 }

@@ -15,6 +15,7 @@ import {
 } from "@/lib/db/schema";
 import { evaluateAccess } from "@/lib/domain/access";
 import { HttpError } from "@/lib/http";
+import { requireAdmin } from "@/lib/auth/server";
 export const catalog = unstable_cache(
   async () => {
     if (!process.env.DATABASE_URL) return [];
@@ -76,6 +77,7 @@ export async function courseDetail(slug: string) {
     return {
       course,
       offer,
+      trailer: course.trailerId ? { courseId: course.id } : null,
       curriculum: rows.map((r) => ({
         id: r.lesson.id,
         title: r.revision.title,
@@ -84,6 +86,30 @@ export async function courseDetail(slug: string) {
       })),
     };
   });
+}
+export async function authorizedTrailer(
+  db: Db,
+  courseId: string,
+  draft = false,
+) {
+  if (draft) await requireAdmin();
+  const course = await db.query.courses.findFirst({
+    where: eq(courses.id, courseId),
+  });
+  if (!course || (!draft && course.status === "draft"))
+    throw new HttpError(404, "Trailer not found.");
+  const assetId = draft ? course.trailerDraftId : course.trailerId;
+  if (!assetId) throw new HttpError(404, "Trailer not found.");
+  const asset = await assetById(db, assetId);
+  if (
+    !asset ||
+    asset.kind !== "video" ||
+    !asset.private ||
+    !asset.ready ||
+    asset.duration <= 0
+  )
+    throw new HttpError(409, "This trailer is still processing.");
+  return asset;
 }
 export async function authorizedLesson(
   db: Db,

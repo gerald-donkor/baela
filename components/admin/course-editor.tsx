@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   Circle,
   FileText,
+  Film,
   ListVideo,
   Rocket,
 } from "lucide-react";
@@ -19,6 +20,7 @@ import { Uploader, VerifyAsset, type UploadedAsset } from "./uploader";
 import { Button } from "@/components/ui/button";
 import { ManagedImage } from "@/components/managed-image";
 import { StudioHeading, StudioPanel, CourseStatus } from "./studio-ui";
+import { TrailerEditor } from "./trailer-editor";
 import styles from "./studio.module.css";
 
 type Course = {
@@ -29,6 +31,8 @@ type Course = {
   description: string;
   status: string;
   coverId: string | null;
+  trailerId: string | null;
+  trailerDraftId: string | null;
   everPublished: boolean;
 };
 type Section = { id: string; title: string; position: number };
@@ -118,6 +122,7 @@ export function CourseEditor({
   }
   const tabs = [
     { id: "details", label: "Course details", icon: FileText },
+    { id: "trailer", label: "Trailer", icon: Film },
     { id: "curriculum", label: "Curriculum", icon: ListVideo },
     { id: "publish", label: "Publishing", icon: Rocket },
   ];
@@ -191,6 +196,13 @@ export function CourseEditor({
         id={`course-panel-${tab}`}
         aria-labelledby={`course-tab-${tab}`}
       >
+        {tab === "trailer" && (
+          <TrailerEditor
+            course={course}
+            media={media}
+            onDirtyChange={setDirty}
+          />
+        )}
         {tab === "details" && (
           <div className={styles.editorGrid}>
             <StudioPanel>

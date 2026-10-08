@@ -19,12 +19,15 @@ async function post(url: string, body: unknown) {
 }
 export function LessonPlayer({
   lessonId,
+  courseId,
   position = 0,
   completed = false,
   signedIn = false,
   draft = false,
-}: {
-  lessonId: string;
+}: (
+  | { lessonId: string; courseId?: never }
+  | { courseId: string; lessonId?: never }
+) & {
   position?: number;
   completed?: boolean;
   signedIn?: boolean;
@@ -104,7 +107,8 @@ export function LessonPlayer({
     element.addEventListener("loadedmetadata", ready, { once: true });
     async function start() {
       try {
-        if (signedIn) {
+        const target = courseId ? { courseId, draft } : { lessonId, draft };
+        if (signedIn && lessonId && !courseId) {
           const data = await post("/api/progress", { lessonId });
           if (stopped) return;
           session.current = data.sessionId;
@@ -112,8 +116,7 @@ export function LessonPlayer({
         const { default: Hls } = await import("hls.js");
         if (stopped) return;
         const source = await post("/api/media/sign", {
-          lessonId,
-          draft,
+          ...target,
           hls: Hls.isSupported(),
         });
         if (stopped) return;
@@ -134,7 +137,7 @@ export function LessonPlayer({
               callbacks: LoaderCallbacks<LoaderContext>,
             ) {
               this.canceled = false;
-              post("/api/media/sign", { lessonId, draft, url: context.url })
+              post("/api/media/sign", { ...target, url: context.url })
                 .then(({ url }) => {
                   if (!stopped && !this.canceled)
                     super.load({ ...context, url }, config, callbacks);
@@ -164,7 +167,7 @@ export function LessonPlayer({
           const renew = async () => {
             const at = element.currentTime,
               playing = !element.paused;
-            const source = await post("/api/media/sign", { lessonId, draft });
+            const source = await post("/api/media/sign", target);
             if (stopped) return;
             element.src = source.url;
             element.addEventListener(
@@ -208,7 +211,7 @@ export function LessonPlayer({
       document.removeEventListener("visibilitychange", hide);
       session.current = "";
     };
-  }, [lessonId, position, signedIn, attempt, completed, draft]);
+  }, [lessonId, courseId, position, signedIn, attempt, completed, draft]);
   async function mark() {
     if (!session.current) return;
     setSaving(true);
@@ -237,7 +240,7 @@ export function LessonPlayer({
         playsInline
         preload="metadata"
         controlsList="nodownload"
-        aria-label="Lesson video"
+        aria-label={courseId ? "Course trailer" : "Lesson video"}
         className="aspect-video w-full rounded-2xl bg-black"
       />
       {error && (
@@ -257,22 +260,24 @@ export function LessonPlayer({
           </Button>
         </div>
       )}
-      <div className="flex justify-between items-center gap-4 mt-5">
-        <p className="text-xs text-muted-foreground">
-          {signedIn
-            ? "Your progress saves as you watch."
-            : "Sign in to save your progress."}
-        </p>
-        {signedIn && (
-          <Button
-            variant={done ? "secondary" : "outline"}
-            disabled={saving}
-            onClick={mark}
-          >
-            {done ? "Completed · Undo" : "Mark complete"}
-          </Button>
-        )}
-      </div>
+      {!courseId && (
+        <div className="flex justify-between items-center gap-4 mt-5">
+          <p className="text-xs text-muted-foreground">
+            {signedIn
+              ? "Your progress saves as you watch."
+              : "Sign in to save your progress."}
+          </p>
+          {signedIn && (
+            <Button
+              variant={done ? "secondary" : "outline"}
+              disabled={saving}
+              onClick={mark}
+            >
+              {done ? "Completed · Undo" : "Mark complete"}
+            </Button>
+          )}
+        </div>
+      )}
     </div>
   );
 }
