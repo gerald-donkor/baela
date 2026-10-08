@@ -5,10 +5,9 @@ import { getViewer, requireAdmin } from "@/lib/auth/server";
 import { withDb } from "@/lib/db";
 import { authorizedLesson, assetById } from "@/lib/server/catalog";
 import { allowedMediaUrl, streamingLadder } from "@/lib/domain/media";
-import { signedAsset } from "@/lib/server/imagekit";
+import { signedAsset, imagekitUrlEndpoint } from "@/lib/server/imagekit";
 import { eq } from "drizzle-orm";
 import { lessons, revisions } from "@/lib/db/schema";
-import { required } from "@/lib/config";
 import { rateLimit } from "@/lib/server/rate-limit";
 const input = z.object({
   lessonId: z.uuid(),
@@ -74,14 +73,14 @@ export async function POST(request: Request) {
         if (
           !allowedMediaUrl(
             data.url,
-            required("NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT"),
+            imagekitUrlEndpoint(),
             asset.filePath,
           )
         )
           throw new HttpError(403, "Invalid media resource.");
         const u = new URL(data.url),
           endpointPath = new URL(
-            required("NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT"),
+            imagekitUrlEndpoint(),
           ).pathname.replace(/\/$/, "");
         path = u.pathname.slice(endpointPath.length);
         tr = u.searchParams.get("tr") || undefined;

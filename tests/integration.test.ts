@@ -24,7 +24,8 @@ vi.mock("@/lib/auth/server", () => ({
   requireUser: () => state.viewer,
   requireAdmin: () => state.viewer,
 }));
-vi.mock("@/lib/server/imagekit", () => ({
+vi.mock("@/lib/server/imagekit", async (original) => ({
+  ...(await original<typeof import("@/lib/server/imagekit")>()),
   signedAsset: vi.fn(() => "https://example.test/signed"),
 }));
 vi.mock("next/cache", () => ({

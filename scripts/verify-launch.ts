@@ -14,14 +14,22 @@ const required = [
   "POLAR_ACCESS_TOKEN",
   "POLAR_WEBHOOK_SECRET",
   "IMAGEKIT_PRIVATE_KEY",
-  "NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY",
-  "NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT",
+  "IMAGEKIT_PUBLIC_KEY",
+  "IMAGEKIT_URL_ENDPOINT",
   "CRON_SECRET",
   "NEXT_PUBLIC_SENTRY_DSN",
   "NEXT_PUBLIC_SUPPORT_EMAIL",
 ];
 for (const key of required)
-  if (!process.env[key]) failures.push("Missing " + key);
+  if (
+    !process.env[key] &&
+    !(
+      key.startsWith("IMAGEKIT_") &&
+      key !== "IMAGEKIT_PRIVATE_KEY" &&
+      process.env["NEXT_PUBLIC_" + key]
+    )
+  )
+    failures.push("Missing " + key);
 for (const key of ["NEON_AUTH_COOKIE_SECRET", "CRON_SECRET"])
   if ((process.env[key]?.length || 0) < 32)
     failures.push(key + " must have at least 32 random characters");

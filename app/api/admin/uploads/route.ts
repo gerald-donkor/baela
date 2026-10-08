@@ -1,7 +1,13 @@
 import { z } from "zod";
 import { endpoint, sameOrigin, HttpError } from "@/lib/http";
 import { requireAdmin } from "@/lib/auth/server";
-import { imagekit, signedAsset } from "@/lib/server/imagekit";
+import {
+  imagekit,
+  signedAsset,
+  isImageKitConfigured,
+  imagekitPublicKey,
+  imagekitUploadFolder,
+} from "@/lib/server/imagekit";
 import { withDb } from "@/lib/db";
 import { assets } from "@/lib/db/schema";
 import { uploadLimits } from "@/lib/config";
@@ -11,6 +17,11 @@ export async function POST(request: Request) {
   return endpoint(async () => {
     sameOrigin(request);
     await requireAdmin();
+    if (!isImageKitConfigured())
+      throw new HttpError(
+        503,
+        "ImageKit uploads are not configured yet. Add the ImageKit keys and URL endpoint, then restart the application.",
+      );
     const data = z
       .discriminatedUnion("action", [
         z.object({ action: z.literal("authorize") }),
@@ -25,8 +36,13 @@ export async function POST(request: Request) {
       .parse(await request.json());
     if (data.action === "authorize")
       return {
-        ...imagekit().helper.getAuthenticationParameters(undefined, 300),
-        publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY,
+        // The installed SDK signs an absolute Unix timestamp, not a duration.
+        ...imagekit().helper.getAuthenticationParameters(
+          undefined,
+          Math.floor(Date.now() / 1000) + 300,
+        ),
+        publicKey: imagekitPublicKey(),
+        folder: imagekitUploadFolder(),
       };
     if (data.action === "preview")
       return withDb(async (db) => {
@@ -97,7 +113,9 @@ export async function POST(request: Request) {
       })
       .parse(file);
     if (
-      !metadata.filePath.startsWith("/baela/") ||
+      !metadata.filePath.startsWith(
+        imagekitUploadFolder() + "/" + data.kind + "/",
+      ) ||
       !metadata.isPrivateFile ||
       metadata.size > uploadLimits[data.kind]
     )
