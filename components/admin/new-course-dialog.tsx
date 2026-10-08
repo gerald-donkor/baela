@@ -4,6 +4,7 @@ import { Dialog } from "radix-ui";
 import { Plus, X, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CommandForm } from "./command-form";
+import { RequiredField } from "./required-field";
 import styles from "./studio.module.css";
 
 export function NewCourseDialog() {
@@ -49,7 +50,7 @@ export function NewCourseDialog() {
             onSuccess={() => setOpen(false)}
           >
             <label className="field-label">
-              Course title
+              <RequiredField>Course title</RequiredField>
               <input
                 className="field"
                 name="title"
@@ -74,7 +75,7 @@ export function NewCourseDialog() {
               />
             </label>
             <label className="field-label">
-              Course URL
+              <RequiredField>Course URL</RequiredField>
               <input
                 className="field"
                 name="slug"

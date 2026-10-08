@@ -5,6 +5,7 @@ import { desc, eq } from "drizzle-orm";
 import { withDb } from "@/lib/db";
 import { refundRequests, users } from "@/lib/db/schema";
 import { CommandForm } from "@/components/admin/command-form";
+import { RequiredField } from "@/components/admin/required-field";
 export default async function Refunds() {
   await requireAdminPage();
   const rows = await withDb((db) =>
@@ -40,24 +41,24 @@ export default async function Refunds() {
                   base={{ action: "refund-response", id: r.id, decline: false }}
                   label="Save response"
                 >
-                  <textarea
-                    aria-label="Response to student"
-                    name="response"
-                    className="field"
-                    defaultValue={r.response}
-                    required
-                  />
+                  <label className="field-label">
+                    <RequiredField>Response to student</RequiredField>
+                    <textarea
+                      name="response"
+                      className="field"
+                      defaultValue={r.response}
+                      required
+                    />
+                  </label>
                 </CommandForm>
                 <CommandForm
                   base={{ action: "refund-response", id: r.id, decline: true }}
                   label="Decline request"
                 >
-                  <textarea
-                    aria-label="Reason for declining"
-                    name="response"
-                    className="field"
-                    required
-                  />
+                  <label className="field-label">
+                    <RequiredField>Reason for declining</RequiredField>
+                    <textarea name="response" className="field" required />
+                  </label>
                 </CommandForm>
               </div>
             ) : (

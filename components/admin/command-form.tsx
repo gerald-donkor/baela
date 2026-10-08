@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { command } from "./client";
 import { Button } from "@/components/ui/button";
+import { RequiredFieldsNote } from "./required-field";
 export function CommandForm({
   base,
   children,
@@ -46,6 +47,7 @@ export function CommandForm({
   }
   return (
     <form onSubmit={submit} className="space-y-4">
+      {children && <RequiredFieldsNote />}
       {children}
       <div className="flex flex-wrap items-center gap-4">
         <Button

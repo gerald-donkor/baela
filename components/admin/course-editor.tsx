@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { ManagedImage } from "@/components/managed-image";
 import { StudioHeading, StudioPanel, CourseStatus } from "./studio-ui";
 import { TrailerEditor } from "./trailer-editor";
+import { RequiredField, RequiredFieldsNote } from "./required-field";
 import styles from "./studio.module.css";
 
 type Course = {
@@ -219,7 +220,7 @@ export function CourseEditor({
                   onSuccess={() => setDirty(false)}
                 >
                   <label className="field-label">
-                    Course title
+                    <RequiredField>Course title</RequiredField>
                     <input
                       name="title"
                       defaultValue={course.title}
@@ -229,7 +230,7 @@ export function CourseEditor({
                     />
                   </label>
                   <label className="field-label">
-                    Course URL
+                    <RequiredField>Course URL</RequiredField>
                     <input
                       name="slug"
                       defaultValue={course.slug}
@@ -365,7 +366,7 @@ export function CourseEditor({
                 label="Add section"
               >
                 <label className="field-label">
-                  New section
+                  <RequiredField>New section</RequiredField>
                   <input
                     name="title"
                     className="field"
@@ -388,7 +389,7 @@ export function CourseEditor({
                     variant="outline"
                   >
                     <label className="field-label">
-                      Selected section
+                      <RequiredField>Selected section</RequiredField>
                       <input
                         className="field"
                         name="title"
@@ -499,7 +500,7 @@ export function CourseEditor({
                       complete: !!course.summary,
                       title: "Introduce your course",
                       detail:
-                        "Add a short description to help students choose.",
+                        "Add a short description to help students choose. Optional for publishing.",
                     },
                     {
                       complete: !!course.coverId,
@@ -517,7 +518,7 @@ export function CourseEditor({
                       title: "Connect your course price",
                       detail: offer?.active
                         ? `${new Intl.NumberFormat("en-US", { style: "currency", currency: offer.currency }).format(offer.amount / 100)} one-time purchase`
-                        : "Create a course product in Polar and connect it below.",
+                        : "Required to publish. Create a course product in Polar and connect it below.",
                     },
                   ].map(({ complete, title, detail }) => (
                     <li
@@ -584,13 +585,17 @@ export function CourseEditor({
                     label={offer ? "Refresh product" : "Connect product"}
                   >
                     <label className="field-label">
-                      Polar product ID
+                      <RequiredField>Polar product ID</RequiredField>
                       <input
                         className="field"
                         name="productId"
                         defaultValue={offer?.productId}
                         required
                       />
+                      <span className={styles.fieldHint}>
+                        Required to publish this course. Connect an active
+                        course product from Polar.
+                      </span>
                     </label>
                   </CommandForm>
                 </div>
@@ -699,8 +704,9 @@ function LessonEditor({
         Save your work as a draft, preview it, then publish when you’re ready.
       </p>
       <form onSubmit={save} className="space-y-5" onChange={changed}>
+        <RequiredFieldsNote />
         <label className="field-label">
-          Lesson title
+          <RequiredField>Lesson title</RequiredField>
           <input
             className="field"
             value={title}
@@ -710,9 +716,10 @@ function LessonEditor({
           />
         </label>
         <label className="field-label">
-          Video
+          <RequiredField publishOnly>Video</RequiredField>
           <select
             className="field"
+            aria-describedby="lesson-video-requirement"
             value={videoId}
             onChange={(e) => setVideoId(e.target.value)}
           >
@@ -725,6 +732,10 @@ function LessonEditor({
                 </option>
               ))}
           </select>
+          <span id="lesson-video-requirement" className={styles.fieldHint}>
+            You can save a draft without a video. Publishing requires a verified
+            video with a duration.
+          </span>
         </label>
         <Uploader
           kind="video"

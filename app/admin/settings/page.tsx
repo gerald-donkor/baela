@@ -5,6 +5,7 @@ import { withDb } from "@/lib/db";
 import { settings } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { CommandForm } from "@/components/admin/command-form";
+import { RequiredField } from "@/components/admin/required-field";
 export default async function Settings() {
   await requireAdminPage();
   const business = await withDb((db) =>
@@ -74,7 +75,7 @@ export default async function Settings() {
         <h2 className="text-xl font-medium mb-5">Business profile</h2>
         <CommandForm base={{ action: "business" }}>
           <label className="field-label">
-            Seller name
+            <RequiredField>Seller name</RequiredField>
             <input
               name="name"
               defaultValue={value.name}
@@ -83,7 +84,7 @@ export default async function Settings() {
             />
           </label>
           <label className="field-label">
-            Public instructor name
+            <RequiredField>Public instructor name</RequiredField>
             <input
               name="instructor"
               defaultValue={value.instructor}
@@ -92,7 +93,7 @@ export default async function Settings() {
             />
           </label>
           <label className="field-label">
-            Country (two-letter code)
+            <RequiredField>Country (two-letter code)</RequiredField>
             <input
               name="country"
               defaultValue={value.country}
@@ -105,18 +106,19 @@ export default async function Settings() {
             />
           </label>
           <label className="field-label">
-            Seller type
+            <RequiredField>Seller type</RequiredField>
             <select
               name="sellerType"
               className="field"
               defaultValue={value.sellerType || "individual"}
+              required
             >
               <option value="individual">Individual</option>
               <option value="business">Registered business</option>
             </select>
           </label>
           <label className="field-label">
-            Support email
+            <RequiredField>Support email</RequiredField>
             <input
               name="supportEmail"
               type="email"
@@ -140,7 +142,7 @@ export default async function Settings() {
             label="Connect / refresh product"
           >
             <label className="field-label">
-              Polar product ID
+              <RequiredField>Polar product ID</RequiredField>
               <input name="productId" className="field" required />
             </label>
           </CommandForm>
@@ -153,7 +155,7 @@ export default async function Settings() {
           </h2>
           <CommandForm base={{ action: "policy", key }} label="Publish policy">
             <label className="field-label">
-              Policy text (Markdown)
+              <RequiredField>Policy text (Markdown)</RequiredField>
               <textarea
                 name="content"
                 className="field min-h-64"
