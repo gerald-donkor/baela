@@ -1,0 +1,32 @@
+[
+  {
+    "id": "01-hook",
+    "start": 0.55,
+    "duration": 2.976,
+    "text": "Your next line of code can start with a question."
+  },
+  {
+    "id": "02-start",
+    "start": 5.0,
+    "duration": 3.024,
+    "text": "Open your project. Start Claude Code."
+  },
+  {
+    "id": "03-explore",
+    "start": 9.2,
+    "duration": 3.264,
+    "text": "Ask how the code works. Find your way around."
+  },
+  {
+    "id": "04-change",
+    "start": 14.0,
+    "duration": 4.8,
+    "text": "Describe a change. See what changes, and review the diff."
+  },
+  {
+    "id": "05-course",
+    "start": 21.2,
+    "duration": 5.952,
+    "text": "Learn it step by step. Claude Code Tutorial. Follow along on Bay-la."
+  }
+]

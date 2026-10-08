@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Claude Code Tutorial — Baela trailer</title>
+<style>
+@font-face{font-family:Geist;src:url(assets/Geist-Variable.woff2)}
+@font-face{font-family:Mono;src:url(assets/GeistMono-Variable.woff2)}
+@font-face{font-family:Editorial;src:url(assets/SourceSerif4Display-Regular.woff2)}
+*{box-sizing:border-box}body{margin:0;background:#151514;color:#faf9f5;font:16px Geist,Arial}main{max-width:1920px;margin:auto}canvas{display:block;width:100%;aspect-ratio:16/9}nav{display:flex;gap:18px;align-items:center;padding:16px 24px}button{font:inherit;padding:10px 18px;border:0;border-radius:5px;color:#151514;background:#faf9f5;cursor:pointer}input{width:min(55vw,800px);accent-color:#d97757}button:focus-visible,input:focus-visible{outline:3px solid #d97757;outline-offset:4px}span{font-size:14px;color:#b0aea5}
+</style></head><body><main><canvas width="1920" height="1080" aria-label="Claude Code Tutorial trailer"></canvas><nav><button id="play">Play with sound</button><input id="scrub" aria-label="Trailer time" type="range" min="0" max="28" step=".01" value="0"><span id="clock">00:00 / 00:28</span></nav><audio id="sound" src="audio/final-mix.wav" preload="auto"></audio></main>
+<script>
+const W=1920,H=1080,DURATION=28,canvas=document.querySelector('canvas'),ctx=canvas.getContext('2d');
+const C={ivory:'#faf9f5',slate:'#151514',clay:'#d97757',peach:'#ebc9b7',shell:'#262624',gray:'#b0aea5',mineral:'#629987',line:'#3d3d3a',paper:'#e8e6dc'};
+const images={};
+const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const smooth=t=>{t=clamp(t);return t*t*(3-2*t)};
+const out=t=>1-Math.pow(1-clamp(t),3);
+function rect(x,y,w,h,fill,r=0){ctx.fillStyle=fill;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill()}
+function line(x,y,x2,y2,color,width=2){ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.stroke()}
+function text(txt,x,y,size=40,color=C.ivory,font='Geist',weight=400,align='left'){ctx.fillStyle=color;ctx.font=`${weight} ${size}px ${font}`;ctx.textAlign=align;ctx.textBaseline='alphabetic';ctx.fillText(txt,x,y)}
+function measure(txt,size=40,font='Geist',weight=400){ctx.font=`${weight} ${size}px ${font}`;return ctx.measureText(txt).width}
+function alpha(a,fn){ctx.save();ctx.globalAlpha*=clamp(a);fn();ctx.restore()}
+function appear(t,start,duration,fn,dy=18){const a=out((t-start)/duration);ctx.save();ctx.globalAlpha*=a;ctx.translate(0,dy*(1-a));fn();ctx.restore()}
+function logo(kind,x,y,w){const im=images[kind];ctx.drawImage(im,x,y,w,w*im.naturalHeight/im.naturalWidth)}
+function spark(x,y,s){ctx.drawImage(images.spark,x,y,s,s)}
+function typing(str,p){return str.slice(0,Math.floor(clamp(p)*str.length))}
+function typed(str,x,y,size,p,color=C.ivory,cursor=true){const s=typing(str,p);text(s,x,y,size,color,'Mono');if(cursor){const w=measure(s,size,'Mono');rect(x+w+7,y-size*.78,Math.max(5,size*.12),size*.94,C.clay,1)}}
+function progress(t,dark=true){const color=dark?C.line:C.paper;line(120,1018,1800,1018,color,2);line(120,1018,120+1680*clamp(t/DURATION),1018,C.clay,3)}
+function cornerLabel(t,dark=true){text('Baela',1800,98,28,dark?C.ivory:C.slate,'Geist',550,'right')}
+function chapter(label,t,dark=false){text(label,120,162,73,dark?C.ivory:C.slate,'Editorial');logo(dark?'ivory':'slate',1400,104,400)}
+function opening(t){
+ const q=smooth((t-4.12)/.86);
+ rect(0,0,W,H,C.clay);
+ const sx=lerp(0,120,q),sy=lerp(0,265,q),sw=lerp(W,1680,q),sh=lerp(H,655,q);
+ // The same terminal surface pulls back into the project view.
+ rect(sx,sy,sw,sh,C.slate,lerp(0,16,q));
+ alpha(q,()=>{text('Begin in your project.',120,163,76,C.slate,'Editorial');text('01',1800,155,30,C.slate,'Mono',400,'right')});
+ alpha(1-q,()=>{
+  appear(t,.12,.8,()=>logo('ivory',120,118,900),0);
+  text('>',130,590,98,C.clay,'Mono');
+  typed('How does this code work?',240,590,83,(t-.62)/1.87,C.ivory,t<3.75);
+  appear(t,2.75,.7,()=>text('Start with a question.',241,702,46,C.gray,'Editorial'),12);
+  cornerLabel(t);
+  progress(t);
+ });
+ if(q>0){alpha(q,()=>{
+  text('~/my-project',176,324,27,C.gray,'Mono');
+  text('Terminal',1740,324,24,C.gray,'Geist',400,'right');
+  line(120,355,1800,355,C.line,1.5);
+  text('$',178,451,51,C.clay,'Mono');
+  typed('cd my-project',239,451,51,(t-4.92)/.67,C.ivory,t<5.65);
+  if(t>5.82){text('$',178,545,51,C.clay,'Mono');typed('claude',239,545,51,(t-5.84)/.45,C.ivory,t<6.5)}
+  appear(t,6.55,.55,()=>{
+   logo('ivory',178,649,478);
+   text('Ready in your project.',178,810,31,C.gray,'Mono');
+   text('>',1700,810,44,C.clay,'Mono');
+  },14);
+  text('Launch Claude Code from your project folder.',120,985,28,C.slate,'Geist');
+ });}
+}
+function explore(t){
+ rect(0,0,W,H,C.ivory);
+ chapter('Understand the code.',t);
+ const e=out((t-9)/.6);ctx.save();ctx.translate(0,20*(1-e));
+ rect(120,265,1680,665,C.slate,16);
+ text('~/my-project',173,322,27,C.gray,'Mono');text('Project files',172,409,26,C.gray);text('Illustrative walkthrough',1740,322,22,C.gray,'Geist',400,'right');
+ line(120,355,1800,355,C.line,1.5);line(565,355,565,930,C.line,1.5);
+ const files=[['src/',453,0],['app/',520,1],['page.tsx',587,2],['components/',675,1],['Hero.tsx',742,2]];
+ const focus=smooth((t-11.35)/.45);
+ rect(137,704,410,62,`rgba(217,119,87,${focus*.16})`,6);
+ if(focus>.01)rect(137,710,4,50,C.clay,2);
+ for(const [name,y,depth] of files){text(name,174+depth*35,y,31,name==='Hero.tsx'&&focus>.1?C.peach:C.gray,'Mono')}
+ line(187,478,187,698,C.line,2);line(222,547,222,570,C.line,2);
+ text('>',616,433,42,C.clay,'Mono');typed('How does the homepage work?',674,433,37,(t-9.18)/1.12,C.ivory,t<10.6);
+ appear(t,10.85,.5,()=>{spark(617,508,28);text('The homepage renders <Hero />.',666,537,38,C.ivory,'Mono');},12);
+ appear(t,11.55,.5,()=>text('Its button label lives in Hero.tsx.',666,609,34,C.gray,'Mono'),12);
+ appear(t,12.1,.45,()=>{
+  line(667,659,1715,659,C.line,1.5);
+  text('components/Hero.tsx',667,716,29,C.peach,'Mono');
+  text('<button>Start</button>',667,797,42,C.ivory,'Mono');
+ },16);
+ ctx.restore();
+ text('Ask about the project. Follow the explanation.',120,985,28,C.slate);progress(t,false);
+}
+function diff(t){
+ rect(0,0,W,H,C.slate);
+ logo('ivory',120,90,515);text('Proposed change',1800,122,27,C.gray,'Geist',400,'right');
+ text('>',120,240,47,C.clay,'Mono');typed('Change the button to “Start learning”.',177,240,40,(t-14.12)/1.15,C.ivory,t<15.55);
+ appear(t,15.0,.55,()=>{
+  text('components/Hero.tsx',176,331,29,C.gray,'Mono');
+  line(120,357,1800,357,C.line,1.5);
+  const yy=[439,523,607,691];
+  text('12',176,yy[0],27,C.gray,'Mono');text('<button>',305,yy[0],47,C.ivory,'Mono');
+  alpha(out((t-15.5)/.35),()=>{rect(120,467,1680,80,'#342523');text('13',176,yy[1],27,'#bb8f84','Mono');text('−',253,yy[1],39,'#dc9b8b','Mono');text('  Start',305,yy[1],47,'#dc9b8b','Mono');});
+  alpha(out((t-15.95)/.38),()=>{rect(120,551,1680,80,'#243a32');rect(120,551,5,80,C.mineral);text('13',176,yy[2],27,'#a8c8b9','Mono');text('+',253,yy[2],39,'#bcd1ca','Mono');text('  Start learning',305,yy[2],47,'#bcd1ca','Mono');});
+  text('14',176,yy[3],27,C.gray,'Mono');text('</button>',305,yy[3],47,C.ivory,'Mono');
+  line(120,735,1800,735,C.line,1.5);
+ },10);
+ appear(t,16.9,.7,()=>text('You review the change.',960,903,70,C.ivory,'Editorial',400,'center'),18);
+ progress(t);
+}
+function verbs(t){
+ rect(0,0,W,H,C.clay);
+ const words=[['Ask.',307,18.4],['Understand.',511,18.8],['Review.',715,19.2]];
+ for(const [s,y,st] of words){const p=out((t-st)/.48);ctx.save();ctx.beginPath();ctx.rect(120,y-144,1600,180);ctx.clip();ctx.translate(0,(1-p)*130);text(s,148,y,158,C.slate,'Editorial');ctx.restore();}
+ appear(t,19.6,.6,()=>text('A workflow you can follow.',153,891,40,C.slate,'Geist'),12);
+ 
+ text('Claude Code Tutorial',1800,97,28,C.slate,'Geist',400,'right');
+}
+function end(t){
+ rect(0,0,W,H,C.ivory);
+ const p=out((t-21)/.85);
+ ctx.save();ctx.translate(0,(1-p)*25);ctx.globalAlpha*=p;
+ logo('slate',280,252,1360);
+ text('Tutorial',960,615,190,C.slate,'Editorial',400,'center');
+ ctx.restore();
+ appear(t,22.05,.7,()=>text('Learn it. Try it. Make it yours.',960,735,42,C.slate,'Geist',400,'center'),10);
+ appear(t,23.35,.7,()=>{
+  rect(707,817,506,84,C.slate,8);
+  text('Follow along on Baela',960,872,30,C.ivory,'Geist',500,'center');
+ },8);
+ text('An independent Baela course',960,990,24,'#73726c','Geist',400,'center');
+ // Quiet finished title hold. No logo filters, rotations, recoloring or distortion.
+}
+const scenes=[{start:0,end:9,fn:opening},{start:9,end:14,fn:explore},{start:14,end:18.35,fn:diff},{start:18.35,end:21,fn:verbs},{start:21,end:28,fn:end}];
+function renderFrame(t){t=clamp(t,0,27.999);ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;let i=scenes.findIndex(s=>t>=s.start&&t<s.end);if(i<0)i=scenes.length-1;const sc=scenes[i];sc.fn(t);if(i>0&&t-sc.start<.26){const a=1-smooth((t-sc.start)/.26);alpha(a,()=>scenes[i-1].fn(sc.start-.001));}}
+window.renderFrame=renderFrame;window.trailerDuration=DURATION;
+window.ready=Promise.all([document.fonts.load('400 100px Editorial'),document.fonts.load('400 100px Mono'),document.fonts.load('400 100px Geist'),...Object.entries({slate:'claude-code-slate.png',ivory:'claude-code-ivory.png',spark:'claude-spark-clay.png'}).map(([k,src])=>new Promise((resolve,reject)=>{const im=new Image;im.onload=()=>{images[k]=im;resolve()};im.onerror=reject;im.src='assets/'+src}))]).then(()=>{renderFrame(0)});
+const audio=document.querySelector('#sound'),play=document.querySelector('#play'),scrub=document.querySelector('#scrub'),clock=document.querySelector('#clock');let playing=false;
+function tick(){if(playing){let t=audio.currentTime;renderFrame(t);scrub.value=t;clock.textContent=`00:${Math.floor(t).toString().padStart(2,'0')} / 00:28`;if(t>=27.98){audio.pause();playing=false;play.textContent='Replay with sound'}else requestAnimationFrame(tick)}}
+play.onclick=async()=>{await window.ready;if(playing){playing=false;audio.pause();play.textContent='Play with sound'}else{if(audio.currentTime>=27.98)audio.currentTime=0;await audio.play();playing=true;play.textContent='Pause';tick()}};
+scrub.oninput=()=>{audio.currentTime=Number(scrub.value);renderFrame(Number(scrub.value));clock.textContent=`00:${Math.floor(Number(scrub.value)).toString().padStart(2,'0')} / 00:28`};
+</script></body></html>

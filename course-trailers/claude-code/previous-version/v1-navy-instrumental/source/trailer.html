@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>Claude Code Tutorial — Baela trailer</title>
+<style>
+@font-face{font-family:Geist;src:url('./assets/Geist-Variable.woff2')}@font-face{font-family:GeistMono;src:url('./assets/GeistMono-Variable.woff2')}
+*{box-sizing:border-box}body{margin:0;background:#050919;display:grid;place-items:center;min-height:100vh}canvas{width:min(100vw,177.777vh);height:auto}button{position:fixed;bottom:12px;right:16px;border:1px solid #526387;background:#0b1023;color:#fff;padding:8px 15px;border-radius:6px;font:14px Geist}
+</style>
+<canvas width="1920" height="1080" aria-label="24-second Claude Code course trailer"></canvas><button id="play">Play preview</button>
+<script>
+const canvas=document.querySelector('canvas'), c=canvas.getContext('2d');
+const C={bg:'#050919',panel:'#0b1023',ink:'#f6f7ff',muted:'#a0abc4',accent:'#a6bfff',line:'#25324d',green:'#a4dbbf'};
+const clamp=(x)=>Math.min(1,Math.max(0,x)),ease=(x)=>1-Math.pow(1-clamp(x),3);
+const lerp=(a,b,x)=>a+(b-a)*x;
+function text(s,x,y,size=28,color=C.ink,weight=400,font='Geist'){c.fillStyle=color;c.font=`${weight} ${size}px ${font}`;c.textBaseline='alphabetic';c.fillText(s,x,y)}
+function rect(x,y,w,h,r=0,fill=C.panel,stroke=null){c.beginPath();c.roundRect(x,y,w,h,r);if(fill){c.fillStyle=fill;c.fill()}if(stroke){c.strokeStyle=stroke;c.lineWidth=1.5;c.stroke()}}
+function line(x1,y1,x2,y2,col=C.line,width=1){c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.strokeStyle=col;c.lineWidth=width;c.stroke()}
+function circle(x,y,r,col){c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.fillStyle=col;c.fill()}
+function group(a,x,y,fn){c.save();c.globalAlpha*=clamp(a);c.translate(x,y);fn();c.restore()}
+function label(s,x,y,color=C.accent){c.save();c.letterSpacing='3px';text(s,x,y,18,color,550);c.restore()}
+function enter(t,d,fn){const a=ease((t-d)/0.85);group(a,0,(1-a)*30,fn)}
+function arrow(x,y){line(x,y,x+31,y,C.bg,3);line(x+20,y-11,x+31,y,C.bg,3);line(x+20,y+11,x+31,y,C.bg,3)}
+function frame(x,y,w,h,title){rect(x,y,w,h,22,C.panel,C.line);line(x,y+70,x+w,y+70);[0,1,2].forEach(i=>circle(x+33+i*24,y+35,5,['#8296bf','#536585','#384962'][i]));text(title,x+126,y+43,19,C.muted,400,'GeistMono')}
+function typed(s,t,rate=29){return s.slice(0,Math.floor(Math.max(0,t)*rate))}
+function cursor(x,y,t){if(Math.floor(t*2)%2===0)rect(x,y-28,15,33,1,C.accent)}
+function background(t){c.fillStyle=C.bg;c.fillRect(0,0,1920,1080);const g=c.createRadialGradient(1380+Math.sin(t/7)*70,490,20,1380,490,980);g.addColorStop(0,'#172b5048');g.addColorStop(.6,'#101c3520');g.addColorStop(1,'#05091900');c.fillStyle=g;c.fillRect(0,0,1920,1080);
+  c.save();c.globalAlpha=.18;for(let x=88;x<1900;x+=64)for(let y=156;y<995;y+=64)circle(x,y,1,'#7490c7');c.restore();
+  line(96,141,1824,141,'#27344b');text('baela',96,101,39,C.ink,650);label('CLAUDE CODE TUTORIAL',1410,97,C.muted);
+  label('BAELA / KEEP LEARNING',96,1003,C.muted);label('COURSE TRAILER',1550,1003,C.muted);
+  rect(96,1034,1728,2,0,'#182237');rect(96,1034,1728*clamp(t/24),2,0,C.accent);
+}
+function intro(u){
+ enter(u,0,()=>label('01 / START THE SESSION',100,279));
+ enter(u,.13,()=>{text('Learn',94,424,112,C.ink,550);text('Claude Code.',94,549,108,C.ink,550);text('Step by step.',94,674,108,C.accent,550)});
+ enter(u,.5,()=>text('A guided look at coding with AI.',100,767,31,C.muted));
+ enter(u,.3,()=>{const y=317+Math.sin(u*.8)*5;frame(1010,y,814,439,'your-project');label('TERMINAL',1050,y+126,C.muted);text('$',1051,y+219,52,C.accent,450,'GeistMono');const p=typed('claude',u-.7,7);text(p,1107,y+219,52,C.ink,450,'GeistMono');cursor(1107+p.length*31.2,y+215,u);line(1050,y+267,1784,y+267);text('Start inside your project folder.',1051,y+333,29,C.muted);label('START CLAUDE CODE',1051,y+384)});
+}
+function explore(u){
+ enter(u,0,()=>label('02 / EXPLORE YOUR PROJECT',100,279));
+ enter(u,.1,()=>{text('Explore',94,429,118,C.ink,550);text('your',94,566,118,C.ink,550);text('project.',94,703,118,C.accent,550)});
+ enter(u,.35,()=>text('Ask a question. Build your understanding.',100,789,28,C.muted));
+ enter(u,.15,()=>{frame(928,277,896,294,'a question to start with');text('›',967,409,41,C.accent,450,'GeistMono');text(typed('Explain how this',u-.45,27),1018,403,31,C.ink,450,'GeistMono');text(typed('project works.',u-1.05,25),1018,452,31,C.ink,450,'GeistMono');label('ILLUSTRATIVE PROMPT',968,529,C.muted)});
+ const files=[['src/','Find the structure'],['README.md','Discover the context'],['package.json','Explore the tools']];
+ files.forEach(([name,desc],i)=>enter(u,.6+i*.18,()=>{const x=928+i*304;rect(x,628,288,178,15,'#0c1429',C.line);text(name,x+22,683,24,C.accent,500,'GeistMono');line(x+23,712,x+265,712);text(desc,x+22,758,20,C.muted)}));
+}
+function changes(u){
+ enter(u,0,()=>label('03 / REVIEW THE CHANGE',100,279));
+ enter(u,.1,()=>{text('Make a',94,444,108,C.ink,550);text('change.',94,563,108,C.ink,550);text('Review it.',94,682,108,C.accent,550)});
+ enter(u,.4,()=>text('Follow the request. Read the diff.',100,786,30,C.muted));
+ enter(u,.18,()=>{frame(939,272,885,552,'an illustrative workflow');label('YOUR REQUEST',978,397,C.muted);text(typed('Add an empty state',u-.45,28),978,454,31,C.ink,450,'GeistMono');text(typed('to the project list.',u-1.06,28),978,499,31,C.ink,450,'GeistMono');line(978,541,1785,541);label('REVIEW THE CHANGE',978,591,C.muted);
+ group(ease((u-1.5)/.6),0,0,()=>{rect(968,620,827,130,10,'#17382e88');text('+ if (projects.length === 0) {',992,662,27,C.green,450,'GeistMono');text('+   return <EmptyState />;',992,700,27,C.green,450,'GeistMono');text('+ }',992,738,27,C.green,450,'GeistMono')});text('Keep your judgment in the loop.',978,791,24,C.muted)});
+}
+function finale(u){
+ enter(u,0,()=>label('YOUR NEXT CHAPTER',101,278));
+ enter(u,.08,()=>{text('Claude Code',92,462,142,C.ink,550);text('Tutorial.',92,620,142,C.accent,550)});
+ enter(u,.35,()=>{text('See the workflow. Follow along.',100,710,36,C.muted);rect(100,765,479,86,43,C.accent);text('Start learning on Baela',133,820,27,C.bg,600);arrow(516,809)});
+ enter(u,.2,()=>{c.save();c.translate(1515,543);c.rotate(-.12+Math.sin(u/3)*.025);for(let i=3;i>=0;i--){c.save();c.rotate(i*.11);rect(-217,-217,434,434,48,i===0?'#0d1831':'#0b102320',i===0?'#526993':'#293c60');c.restore()}text('›_',-133,49,173,C.accent,450,'GeistMono');c.restore();label('IDEA → PROMPT → PROJECT',1253,861,C.muted)});
+}
+window.renderFrame=function(t){t=Math.max(0,Math.min(23.999,t));background(t);const starts=[0,6,12,18],scenes=[intro,explore,changes,finale];for(let i=0;i<4;i++){const u=t-starts[i];if(u>=-.38&&u<6.38){const a=clamp((u+.38)/.38)*(i===3?1:clamp((6-u)/.38));group(a,i<3?-ease((u-5.6)/.4)*22:0,0,()=>scenes[i](u+.1));}}};
+window.ready=Promise.all([document.fonts.load('400 28px Geist'),document.fonts.load('550 112px Geist'),document.fonts.load('450 30px GeistMono')]).then(()=>{window.renderFrame(20.5)});
+let playing=false;document.querySelector('#play').onclick=()=>{playing=!playing;document.querySelector('#play').textContent=playing?'Pause preview':'Play preview';if(playing){const start=performance.now();const tick=()=>{if(!playing)return;renderFrame(((performance.now()-start)/1000)%24);requestAnimationFrame(tick)};tick()}};
+</script></html>
