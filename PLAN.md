@@ -1,6 +1,7 @@
 # Baela — Product and Implementation Plan
 
-**Updated:** 2026-10-05  
+**Updated:** 2026-10-07
+
 **Status:** Core v1 implemented and locally validated; external-service acceptance and production launch gates remain open.
 
 This is the maintained plan for Baela. It consolidates the agreed product requirements, the implementation already completed, and the remaining release work. It is not a verbatim copy of a missing historical plan.
@@ -134,6 +135,7 @@ Studio is available only to the immutable configured instructor identity, checke
 
 - Create/edit courses, sections and lessons.
 - Save immutable lesson drafts, privately preview them, and publish explicitly.
+- Save a separate course trailer draft, verify/preview it privately, and publish it explicitly. Replacements preserve the live trailer until publication. Public trailers use the same restricted signing pipeline and never count toward lesson progress or the course publication guard.
 - Course/section metadata and order update immediately; the editor must state this distinction from lesson draft publication.
 - Author through visual Tiptap, Markdown source, and rendered preview. Preserve semantic round trips for headings, emphasis, links, lists, quotes, code, tables and managed images.
 - Upload private videos/images/resources directly from the browser to ImageKit, with progress and recoverable errors.
@@ -144,6 +146,8 @@ Studio is available only to the immutable configured instructor identity, checke
 - Review/respond to refund requests; issue money refunds externally in Polar.
 - Configure public instructor/support and business details, legal text, and offer mappings.
 - Inspect failed jobs, fix their cause, and retry through Studio.
+
+Studio now uses the Horizon dashboard design: persistent navigation, database-backed course counts, searchable status-filtered inventory, course creation dialog, details/trailer/curriculum/publishing tabs, and a reusable media library. ImageKit configuration accepts server-side `IMAGEKIT_PUBLIC_KEY`/`IMAGEKIT_URL_ENDPOINT` names (with legacy `NEXT_PUBLIC_` aliases) and an optional upload root. The local instructor identity is configured; deployment environments require their own identity configuration. Live upload/streaming acceptance remains required. See [Studio design notes](design/studio-ui.md).
 
 ## 6. Data model, state and boundaries
 
@@ -171,13 +175,14 @@ Current migrations:
 1. `0000_illegal_betty_ross.sql`: base schema.
 2. `0001_crazy_krista_starr.sql`: exact checkout/order association.
 3. `0002_perfect_newton_destine.sql`: source video height and managed revision-image references.
+4. `0003_course_trailers.sql`: nullable draft/published trailer asset references on courses, with asset foreign keys. Applied to the configured local Neon database on 2026-10-08 after confirming the existing migration hashes.
 
 Apply reviewed migrations to isolated Neon before production. Reverify existing video assets after migration 0002 to populate height. Application migrations must not alter managed Auth's internal tables.
 
 ## 7. Media protection and delivery
 
 - Keep paid source objects private. Registration verifies provider metadata, private status, folder and allowed file constraints.
-- Sign only media that belongs to the authorized published revision, or an explicitly authorized instructor draft/editor preview.
+- Sign only media that belongs to the authorized published lesson revision, the published trailer of a public course, or an explicitly authorized instructor draft/editor preview. Trailer requests resolve the asset from the course; callers cannot supply an arbitrary asset ID.
 - Use short-lived URLs, normally at most five minutes and capped by the student's access expiry.
 - Authorize/sign HLS manifests and segments; restrict origin, source path, query parameters and transformations.
 - Cap HLS resolutions by verified source height. Below 360p or without verified height, use signed MP4 rather than upscaling.

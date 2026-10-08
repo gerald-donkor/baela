@@ -118,3 +118,13 @@ The Open Graph image uses bundled Geist, the midnight palette, and the horizon. 
 3. Add any new semantic token to both themes and document its purpose here.
 4. Check narrow mobile widths, both themes, keyboard focus, empty/locked/error states, and reduced motion.
 5. Read the installed Next.js guides in `node_modules/next/dist/docs/` before changing routing, rendering, or framework APIs.
+
+## Creator Studio
+
+`components/admin/studio.module.css` extends Horizon with a framed workspace, persistent desktop navigation, wrapped mobile navigation, a course library, and quiet authoring panels. It uses the existing semantic palette, radii, Geist typography, Button, Badge, and managed private-image component. The introductory course panel carries the one restrained blue horizon effect.
+
+`StudioDashboard` presents database-backed counts and course inventory; `StudioCourseLibrary` handles local search, status filters, and sorting. `NewCourseDialog` uses Radix for focus trapping, Escape dismissal, and returning focus. The course editor uses keyboard-operable details/trailer/curriculum/publishing tabs, draft-change warnings, and an explicit publishing checklist. The media library exposes image/video/resource uploads and video readiness verification. Destructive buttons pair their fill with theme-aware primary foreground text to preserve dark-theme contrast.
+
+See [Studio design notes](../design/studio-ui.md) and [preview evidence](../design/previews/README.md). Preview course names are test fixtures; they are absent from the production catalog and Studio data.
+
+The Trailer tab uses the same authoring panels, private uploader, verification control, and video player. Draft and published trailers are separate; upload completion does not publish a video. A quiet status panel identifies the live video, while preview/publish/clear actions stay with the saved draft. Tabs and actions wrap at narrow widths.

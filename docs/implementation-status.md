@@ -1,5 +1,29 @@
 # Implementation checkpoint — 2026-10-02
 
+## Trailer update — 2026-10-08
+
+Courses now have a dedicated **Trailer** tab in Studio, with private MP4 upload or existing-video selection, automatic upload-to-draft saving, processing verification, draft playback, explicit publication, draft clearing, and published-trailer removal. Replacements keep the existing trailer live until publication. Unsaved selections and active uploads participate in the workspace's navigation warning; publishing is disabled during uploads or when the selected video differs from the saved draft.
+
+The real course sales page prefers the published trailer and falls back to the first published free-preview lesson. Trailers do not create curriculum lessons, playback sessions, or learning progress, and do not satisfy the course's published-lesson requirement. Public signing resolves the video from the course and accepts no arbitrary asset ID. Draft-course trailers stay private; draft playback requires an active administrator. The existing same-origin, rate-limit, HLS path, source-height, and short-lived URL checks apply to trailer delivery. Stale publish/remove commands fail rather than changing a newer trailer.
+
+Migration `0003_course_trailers.sql` adds nullable draft/published asset references with foreign keys. It was applied to the configured Neon database after a read-only check confirmed all three existing migration hashes; a follow-up read verified the new fields and migration hash. No existing course metadata, lessons, or uploaded assets were changed. The read-only MCP grant was not broadened.
+
+Verification: `npm run check` passed (lint, generated routes, TypeScript, **115 tests across ten files**, including 16 trailer cases). The webpack production build and eight selected desktop/mobile production Playwright checks (protected pages, security boundaries, theme persistence, and shared controls) passed. A local browser fixture passed draft save, processing/publication guards, verification, private preview, replacement, clear/remove, failed-save retry without a second upload, dirty navigation, keyboard tabs, and both themes at 320/390/768/1440px. Trailer preview made zero progress requests. Screenshots were visually inspected; the fixture route was removed before the production build. Uploads and Server Actions were intercepted; no real videos or test courses were created. Actual ImageKit video processing/playback and expiry acceptance remain outstanding.
+
+## Studio update — 2026-10-07
+
+The admin dashboard now follows Horizon in light and dark themes. It includes persistent responsive navigation, real course/student counts, course search/status filters/sorting, draft creation with automatic editable slugs, details/curriculum/publishing tabs, private cover previews, an ImageKit media library, a publishing checklist, and loading/retry states. Existing server-side instructor guards and authoring commands remain authoritative. Unsaved lesson changes disable publishing and warn before switching the workspace.
+
+ImageKit uploads now support the supplied server-side configuration names and `IMAGEKIT_FOLDER` (with legacy public-name compatibility). File registration checks the configured root and media-kind subfolder. Upload retries reuse an already transferred file after registration failure. The installed SDK's expiry argument is an absolute Unix timestamp; upload signatures now expire five minutes from issuance, covered by a real-SDK HMAC regression test.
+
+The upload picker uses the shared button style and preserves the selected filename after completion. Resetting the hidden native input still allows choosing the same file again, without displaying the misleading “No file chosen” label. A mocked local browser check passed keyboard selection, same-file reselection, registration retry without duplicate transfer, and the 320px layout in both themes; it did not send files to ImageKit.
+
+Verification: ESLint and TypeScript passed; 99 Vitest tests across nine files passed; the webpack production build passed; eight selected production Playwright checks passed across desktop/mobile Chromium (protected routes, security boundaries, theme persistence, and shared controls). Browser UI checks covered both themes, 320px through desktop, course filtering/sorting, dialog focus/escape, slugs, dirty lesson protection, empty states, and a mocked upload registration retry without transferring twice. [Studio screenshots](../design/previews/README.md) use labeled fixtures from a temporary route that was removed after verification. No fixture courses were inserted into the database.
+
+The supplied ImageKit private key passed an authenticated read-only API check and the URL endpoint has a valid HTTPS format. No files were uploaded to or changed in the account by that check. The existing Neon database was inspected in read-only transactions: application tables are present, and its sole verified, active Auth account matches the application user record. That immutable identity is now configured as `ADMIN_AUTH_USER_ID` in the ignored local environment. Codex's hosted Neon MCP connection was installed with read-only OAuth and browser authorization completed. Authenticated Studio and live upload acceptance still need browser testing. No production deployment or database migration was performed.
+
+The sections below preserve the earlier 2026-10-02 checkpoint and its historical verification counts.
+
 The user supplied the original v1 plan during this continuation. It resolves the historical handoff ambiguities: offline viewing is v2, Google/GitHub/email sign-in and self-service deletion are in v1, cumulative full refunds revoke the affected source, and the old $100/month ceiling is withdrawn. Historical budget estimates are not current quotations. No paid service, deployment, or remote migration was performed.
 
 ## Implemented in this continuation

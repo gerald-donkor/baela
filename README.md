@@ -39,6 +39,17 @@ Run `npm run dev` and try each provider from `/auth/sign-in?next=/account`. A su
 
 `npm run check` covers callback session exchange and safe redirects. Run the mocked provider UI checks with `BAELA_E2E_AUTH=1 npm run test:e2e -- tests/e2e/auth.spec.ts` after building. Real provider consent and email delivery require manual testing against your Neon branch.
 
+## Neon MCP for local development
+
+Codex can connect to Neon's hosted MCP server with OAuth:
+
+```sh
+codex mcp add neon --url 'https://mcp.neon.tech/mcp?readonly=true'
+codex mcp login neon --scopes read
+```
+
+Complete authorization in the browser, then reload Codex to expose the server's tools in the current session. The connection is stored in `~/.codex/config.toml`; OAuth credentials stay outside the repository. Read-only access supports inspecting identities and the application schema without changing database records. See [Neon's MCP setup](https://neon.com/docs/ai/connect-mcp-clients-to-neon) and [Codex MCP configuration](https://developers.openai.com/codex/mcp).
+
 ## Commands
 
 ```sh
@@ -79,3 +90,26 @@ The YouTube-like offline library is **not implemented in v1**. Future browser st
 Other deferred features: Polar Benefits, bundles/discounts, Q&A, certificates, captions/search, AI tutoring, waitlists, marketing email, and completion/drop-off analytics. Stable lesson IDs and immutable revisions provide extension points.
 
 Automated integration tests use embedded PostgreSQL with mocked provider responses. Real auth, checkout/refunds, signed HLS and Neon identity deletion still need the live-service acceptance checks. Seller eligibility, reviewed policies, domain, service budgets, and course content remain launch dependencies.
+
+## Creator Studio
+
+The admin dashboard at `/admin` follows the Horizon palette in both themes. It includes a searchable course library, course creation, a tabbed details/trailer/curriculum/publishing workspace, a media library, student access records, refunds, jobs, and settings. Course counts come from the database; retired lessons are excluded.
+
+To add a course trailer, open the course → **Trailer**. Upload an MP4 (automatically saved as a trailer draft), or select an existing video and **Save trailer draft**. **Verify processing**, **Preview draft**, then **Publish trailer**. Uploading a replacement keeps the current trailer live until you publish the replacement. **Clear draft** leaves the published trailer alone; **Remove published trailer** restores the first free-preview lesson on the sales page. Draft-course trailers remain private until the course is published. Trailers are optional and do not count toward curriculum or learning progress. Apply migration `0003_course_trailers.sql` before running this code against another database.
+
+Set `ADMIN_AUTH_USER_ID` to your instructor account's **Neon Auth user ID**, found in Neon → Auth → Users. Signing in with another account cannot grant Studio access. The server checks this identity for every private page, authoring command, and upload authorization.
+
+For uploads, set these values in `.env.local` and your deployment environment:
+
+```dotenv
+IMAGEKIT_PRIVATE_KEY=your-server-only-private-key
+IMAGEKIT_PUBLIC_KEY=your-public-key
+IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/your-imagekit-id
+IMAGEKIT_FOLDER=baela
+```
+
+The earlier `NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY` and `NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT` names remain supported. `IMAGEKIT_FOLDER` selects the upload root (for example, `dev`); files are organized under its video/image/attachment subfolders. Changing this root does not alter paths of already registered assets.
+
+Find the keys in [ImageKit developer settings](https://imagekit.io/dashboard/developer), and the URL endpoint in your ImageKit dashboard. Keep the private key out of chat and source control. Restart the app after local changes, and rebuild/redeploy for deployment changes. Studio → Settings shows which values are missing without exposing keys. “Credentials configured” means values are present; it does not verify the account or its streaming capabilities.
+
+Uploads go directly from the browser to ImageKit as private files using server-issued signatures. Failed registration can retry without uploading the same file again. Verify video processing before publishing a saved lesson draft. Actual uploads and private streaming still need live-service acceptance with your account.

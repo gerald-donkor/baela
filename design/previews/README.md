@@ -34,3 +34,11 @@ Captured from the webpack production build on 2026-10-06:
 - `course-landing-preview.png`: the replacement lesson workspace preview in the landing page.
 
 All content, profiles, and progress in these screens are fixtures. Playback and completion are static. Validation: lint, TypeScript, 69 unit tests, and the webpack build passed; 48 landing/platform regression cases and 15 course checks passed across desktop Chromium, mobile Chromium, and Firefox. The course checks cover all 72 lesson pages and five widths in both themes. See `design/course-ui.md` for routes and details.
+
+## Studio previews — 2026-10-07
+
+- `studio-library-{dark,light}-{1440,390}.png`: course library and responsive Studio navigation.
+- `studio-curriculum-dark-1440.png` / `studio-curriculum-light-390.png`: curriculum and lesson authoring.
+- `studio-publishing-dark-1440.png`: publishing checklist and product connection.
+
+Captured from a temporary local development preview containing labeled test fixtures. The preview route was removed after verification; no sample courses were inserted into the database. Browser checks passed for course search/filter/sort, automatic and manually edited slugs, dialog focus/escape, unsaved draft warnings, disabled publication of unsaved changes, upload registration retry without a second upload, and empty states. Course library layouts were checked at 320/390/768/1024/1440px; editor layouts at 320/390/768/1440px, all in light/dark themes. No page overflow or JavaScript runtime errors were observed. This is UI verification with mocked uploads, not authenticated live-service acceptance.

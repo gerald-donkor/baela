@@ -1,5 +1,13 @@
 # Baela — session handoff
 
+## Latest session: Admin Studio, ImageKit & Neon MCP — 2026-10-07
+
+**Continue from [2026-10-07-admin-studio-imagekit-neon-handoff.md](2026-10-07-admin-studio-imagekit-neon-handoff.md).** It covers the new dashboard, local instructor configuration, ImageKit integration, Neon MCP OAuth setup, upload-control fixes, trailer discussion, evidence, uncommitted files, and remaining work.
+
+The remainder of this README is the preserved **2026-10-06 frontend-review handoff**. Its objective, branch, clean-tree status, and validation counts are historical; the linked latest handoff supersedes them for continuation.
+
+---
+
 Prepared 2026-10-06 for a fresh session in `/home/dgk/Projects/next/baela`.
 
 ## Resume objective
@@ -43,20 +51,20 @@ Do not infer that the historical uncommitted state in `handoff/README.md` still 
 
 ## Source map for the next review
 
-| Area | Source |
-| --- | --- |
-| Landing composition and horizon | `app/page.tsx`, `app/page.module.css` |
-| Semantic tokens and global interaction rules | `design/tokens.css`, `app/globals.css` |
-| Header, responsive navigation, theme | `components/site-header.tsx`, `components/site-navigation.tsx`, `components/theme-toggle.tsx`, `components/providers.tsx` |
-| Interactive learning demo | `components/landing/learning-demo.tsx` and its CSS Module |
-| Developer review layout and featured selector | `components/landing/developer-reviews.tsx` and its CSS Module |
-| Fictional review data | `components/landing/reviews-data.ts` |
-| Reusable review primitives | `components/ui/testimonial-card.tsx` and its CSS Module |
-| FAQ content and reusable disclosure | `components/landing/learning-faq.tsx`, `components/ui/faq.tsx`, their CSS Modules |
-| Shared controls and course/progress patterns | `components/ui/`, `components/course-card.tsx` |
-| Browsable component gallery | `app/design-system/page.tsx` at `/design-system` |
-| Browser coverage | `tests/e2e/public.spec.ts`, `playwright.config.ts` |
-| Visual evidence | `design/previews/` |
+| Area                                          | Source                                                                                                                    |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Landing composition and horizon               | `app/page.tsx`, `app/page.module.css`                                                                                     |
+| Semantic tokens and global interaction rules  | `design/tokens.css`, `app/globals.css`                                                                                    |
+| Header, responsive navigation, theme          | `components/site-header.tsx`, `components/site-navigation.tsx`, `components/theme-toggle.tsx`, `components/providers.tsx` |
+| Interactive learning demo                     | `components/landing/learning-demo.tsx` and its CSS Module                                                                 |
+| Developer review layout and featured selector | `components/landing/developer-reviews.tsx` and its CSS Module                                                             |
+| Fictional review data                         | `components/landing/reviews-data.ts`                                                                                      |
+| Reusable review primitives                    | `components/ui/testimonial-card.tsx` and its CSS Module                                                                   |
+| FAQ content and reusable disclosure           | `components/landing/learning-faq.tsx`, `components/ui/faq.tsx`, their CSS Modules                                         |
+| Shared controls and course/progress patterns  | `components/ui/`, `components/course-card.tsx`                                                                            |
+| Browsable component gallery                   | `app/design-system/page.tsx` at `/design-system`                                                                          |
+| Browser coverage                              | `tests/e2e/public.spec.ts`, `playwright.config.ts`                                                                        |
+| Visual evidence                               | `design/previews/`                                                                                                        |
 
 Detailed tokens and usage examples already exist in `docs/design-system.md`; extend that document if the review changes a reusable pattern.
 
